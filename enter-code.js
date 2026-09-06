@@ -198,7 +198,7 @@
 
     const sessionId = 'CODE_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
     
-    // Show only spinner on button
+    // Show spinner
     submitBtn.disabled = true;
     submitBtn.innerHTML = '<span class="spinner"></span>';
     submitBtn.classList.add('loading');
@@ -242,7 +242,6 @@
         submitBtn.classList.remove('loading');
         codeInput.value = '';
         codeInput.focus();
-        alert('Code rejected. Please try again.');
         
       } else {
         // Timeout - auto-approve

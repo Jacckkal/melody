@@ -10,9 +10,13 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Session ID required' });
   }
 
-  const pendingApprovals = global.pendingApprovals || new Map();
-  
-  console.log(`🔍 Checking: ${sessionId}, Total: ${pendingApprovals.size}`);
+  // Initialize pending approvals
+  if (!global.pendingApprovals) {
+    global.pendingApprovals = new Map();
+  }
+  const pendingApprovals = global.pendingApprovals;
+
+  console.log(`🔍 Checking: ${sessionId}`);
   
   if (pendingApprovals.has(sessionId)) {
     const entry = pendingApprovals.get(sessionId);
@@ -20,10 +24,9 @@ export default async function handler(req, res) {
     
     console.log(`📌 ${sessionId} -> ${status}`);
     
-    // Only delete if not pending (approved or rejected)
+    // Only delete if not pending
     if (status !== 'pending') {
       pendingApprovals.delete(sessionId);
-      global.pendingApprovals = pendingApprovals;
     }
     
     return res.status(200).json({ status: status });

