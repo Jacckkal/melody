@@ -1,0 +1,1535 @@
+/* Body font color */
+
+.main,
+.resources-block span {
+  color: #302B4A;
+}
+/* Header background */
+
+.header {
+  background: #FFFFFF;
+}
+/* Footer background */
+
+.footer {
+  background: #B6B5C7;
+}
+.footer,
+.footer a,
+.fnavi,
+.fnavi a {
+  
+}
+.footer,
+.footer a,
+.fnavi,
+.fnavi a {
+  color: #302B4A;
+}
+.copyright,
+.copyright a,
+.lower-footer,
+.lower-footer a {
+  
+}
+.copyright,
+.copyright a,
+.lower-footer,
+.lower-footer a {
+  color: #453e6a;
+}
+.footer a:hover,
+.fnavi a:hover,
+.footer a:focus,
+.fnavi a:focus {
+  
+}
+.footer a:hover,
+.fnavi a:hover,
+.footer a:focus,
+.fnavi a:focus {
+  color: #000000;
+}
+.footer a:focus,
+.fnavi a:focus {
+  
+}
+.footer a:focus,
+.fnavi a:focus {
+  box-shadow: 0 0 3px 3px rgba(0, 0, 0, 0.8);
+}
+.copyright a:focus,
+.lower-footer a:focus {
+  
+}
+.copyright a:focus,
+.lower-footer a:focus {
+  box-shadow: 0 0 3px 3px rgba(0, 0, 0, 0.8);
+}
+/* Page title color */
+
+.top-line,
+.mfp-alert-popup .popup-form_title,
+.choice-block_drop {
+  background-color: #302B4A;
+}
+/* Page title text color */
+
+.title-page,
+.mfp-alert-popup .popup-form_title,
+.choice-block_act,
+.choice-block_act a,
+.choice-block_act:after {
+  
+}
+.title-page,
+.mfp-alert-popup .popup-form_title,
+.choice-block_act,
+.choice-block_act a,
+.choice-block_act:after {
+  color: #ffffff;
+}
+/* Nav bar color */
+
+.header:before,
+.main-navi,
+.collapsed-header .main-navi,
+.desktop-menu-btn {
+  background-color: #B6B5C7;
+}
+/* Navigation text */
+
+.desktop-menu-btn,
+.inner-box-header .main-navi_link,
+.inner-box-header .main-navi_link:after,
+.inner-box-header .main-navi_link-secondary,
+.inner-box-header .main-navi_link-secondary:after {
+  
+}
+.desktop-menu-btn,
+.inner-box-header .main-navi_link,
+.inner-box-header .main-navi_link:after,
+.inner-box-header .main-navi_link-secondary,
+.inner-box-header .main-navi_link-secondary:after {
+  color: #302B4A !important;
+}
+/* Navigation active element color/hover */
+
+.desktop-menu-btn:hover,
+.desktop-menu-btn:focus,
+.inner-box-header .main-navi_link:hover,
+.inner-box-header .main-navi_link-secondary:hover,
+.inner-box-header .main-navi_link:focus,
+.inner-box-header .main-navi_link-secondary:focus {
+  background-color: #B721FF;
+  
+}
+.desktop-menu-btn:hover,
+.desktop-menu-btn:focus,
+.inner-box-header .main-navi_link:hover,
+.inner-box-header .main-navi_link-secondary:hover,
+.inner-box-header .main-navi_link:focus,
+.inner-box-header .main-navi_link-secondary:focus {
+  color: #ffffff;
+}
+/* Navigation top line dropdown link color */
+
+.choice-block_drop a,
+.choice-block_drop strong,
+.choice-block_drop-btn {
+  
+}
+.choice-block_drop a,
+.choice-block_drop strong,
+.choice-block_drop-btn {
+  color: #ffffff;
+}
+/* Navigation top line dropdown link hover */
+
+.choice-block_drop a.selected,
+.choice-block_drop-btn.selected {
+  background-color: #2a2540;
+  
+}
+.choice-block_drop a.selected,
+.choice-block_drop-btn.selected {
+  color: #ffffff;
+}
+.choice-block_drop a:hover,
+.choice-block_drop a.selected:hover,
+.choice-block_drop-btn:hover,
+.choice-block_drop-btn.selected:hover {
+  background-color: #302B4A;
+  
+}
+.choice-block_drop a:hover,
+.choice-block_drop a.selected:hover,
+.choice-block_drop-btn:hover,
+.choice-block_drop-btn.selected:hover {
+  color: #ffffff;
+}
+/* User name & date text color */
+
+.user-block__name,
+.user-block__name a,
+.user-block_time span,
+.user-block__simple-text {
+  
+}
+.user-block__name,
+.user-block__name a,
+.user-block_time span,
+.user-block__simple-text {
+  color: #302B4A;
+}
+/* .user-block__name-text:hover,
+.user-block__name-text:focus {
+	.contrast_color_diff_reverse(@header_bottom, @text_dark_color, @text_light_color, 65%, 27%);
+}
+.user-block__name-text:focus {
+	.contrast_box_shadow_diff(@header_bottom, @text_dark_color, @text_light_color, 65%, 10%);
+} */
+
+/* User last login text color */
+
+.user-block_time p:first-child,
+.user-block_time strong {
+  
+}
+.user-block_time p:first-child,
+.user-block_time strong {
+  color: #625897;
+}
+/* Log out icon & text */
+
+.link-out,
+.link-out:before {
+  
+}
+.link-out,
+.link-out:before {
+  color: #302B4A;
+}
+/* Quantity badge color */
+
+.btn-mail span,
+.btn-messages span,
+.settings-text-buttons__btn .alerts-count span,
+.opportunities__title span {
+  
+}
+.btn-mail span,
+.btn-messages span,
+.settings-text-buttons__btn .alerts-count span,
+.opportunities__title span {
+  color: #ffffff;
+}
+.btn-mail span:before,
+.btn-messages span:before,
+.settings-text-buttons__btn .alerts-count span:before,
+.opportunities__title span:before {
+  background-color: #302B4A;
+}
+/* Mail/settings block background */
+
+.setting-block {
+  background-color: #F8F7F9;
+  border-color: #F8F7F9;
+}
+/* Head menu icons */
+
+.setting-block a {
+  
+}
+.setting-block a {
+  color: #302B4A;
+}
+.setting-block a:hover {
+  color: #4b4374;
+}
+.setting-block a.active {
+  color: #453e6a;
+}
+/* Mail/Settings block divider */
+
+.user-block {
+  border-color: #F8F7F9;
+}
+/* Main buttons color & hover */
+
+/* Secondary buttons color & hover */
+
+.claims-bl_btn.add-e,
+.alerts-block_btn,
+.claims-bl_btn.add-c,
+.claims-bl_btn.add-z,
+.claims-bl_btn.add-acc,
+.claims-bl_btn.export-btn,
+.claims-bl_btn.current-transactions-btn,
+.claims-bl_btn.historical-transactions-btn,
+.claims-bl_btn.print-c,
+.button.button-close,
+.button.button-print,
+.button.button-proceed,
+.button.button-add,
+.claims-bl_btn.mark,
+.claims-bl_btn.issue,
+.claims-bl_btn.add-warning,
+input[type="submit"].filter-block_btn,
+button.filter-block_btn,
+.claims-bl_btn.edit,
+a.button.button-subm,
+button.button.button-subm,
+input.button.button-subm,
+button.button,
+input.button,
+a.button,
+.button.button-reg-link,
+.f-btn.ic_pacman.mod_rectangle,
+.claims-bl_c-btn,
+.ui-button-text-only,
+.button.button-cancel--submit,
+.repayment .pay-now-btn {
+  background-color: #8B54A2;
+}
+.claims-bl_btn.add-e,
+.alerts-block_btn,
+.claims-bl_btn.add-c,
+.claims-bl_btn.add-z,
+.claims-bl_btn.add-acc,
+.claims-bl_btn.export-btn,
+.claims-bl_btn.current-transactions-btn,
+.claims-bl_btn.historical-transactions-btn,
+.claims-bl_btn.print-c,
+.button.button-close,
+.button.button-print,
+.button.button-proceed,
+.button.button-add,
+.claims-bl_btn.mark,
+.claims-bl_btn.issue,
+.claims-bl_btn.add-warning,
+input[type="submit"].filter-block_btn,
+button.filter-block_btn,
+.claims-bl_btn.edit,
+a.button.button-subm,
+button.button.button-subm,
+input.button.button-subm,
+button.button,
+input.button,
+a.button,
+.button.button-reg-link,
+.f-btn.ic_pacman.mod_rectangle,
+.claims-bl_c-btn,
+.ui-button-text-only,
+.button.button-cancel--submit,
+.repayment .pay-now-btn {
+  
+}
+.claims-bl_btn.add-e,
+.alerts-block_btn,
+.claims-bl_btn.add-c,
+.claims-bl_btn.add-z,
+.claims-bl_btn.add-acc,
+.claims-bl_btn.export-btn,
+.claims-bl_btn.current-transactions-btn,
+.claims-bl_btn.historical-transactions-btn,
+.claims-bl_btn.print-c,
+.button.button-close,
+.button.button-print,
+.button.button-proceed,
+.button.button-add,
+.claims-bl_btn.mark,
+.claims-bl_btn.issue,
+.claims-bl_btn.add-warning,
+input[type="submit"].filter-block_btn,
+button.filter-block_btn,
+.claims-bl_btn.edit,
+a.button.button-subm,
+button.button.button-subm,
+input.button.button-subm,
+button.button,
+input.button,
+a.button,
+.button.button-reg-link,
+.f-btn.ic_pacman.mod_rectangle,
+.claims-bl_c-btn,
+.ui-button-text-only,
+.button.button-cancel--submit,
+.repayment .pay-now-btn {
+  color: #ffffff;
+}
+.claims-bl_btn.add-e:hover,
+.claims-bl_btn.add-c:hover,
+.claims-bl_btn.add-z:hover,
+.claims-bl_btn.add-acc:hover,
+.claims-bl_btn.export-btn:hover,
+.claims-bl_btn.current-transactions-btn:hover,
+.claims-bl_btn.historical-transactions-btn:hover,
+.claims-bl_btn.print-c:hover,
+.button.button-close:hover,
+.button.button-print:hover,
+.button.button-proceed:hover,
+.button.button-add:hover,
+.claims-bl_btn.mark:hover,
+.claims-bl_btn.issue:hover,
+.claims-bl_btn.add-warning:hover,
+input[type="submit"].filter-block_btn:hover,
+button.filter-block_btn:hover,
+.claims-bl_btn.edit:hover,
+button.button.button-subm:hover,
+a.button.button-subm:hover,
+input.button.button-subm:hover,
+button.button:hover,
+input.button:hover,
+a.button:hover,
+.alerts-block_btn:hover,
+.button.button-reg-link:hover,
+.f-btn.ic_pacman.mod_rectangle:hover,
+.claims-bl_c-btn:hover,
+.ui-button-text-only:hover,
+.button.button-cancel--submit:hover,
+.repayment .pay-now-btn:hover,
+.claims-bl_btn.add-e:focus,
+.claims-bl_btn.add-c:focus,
+.claims-bl_btn.add-z:focus,
+.claims-bl_btn.add-acc:focus,
+.claims-bl_btn.export-btn:focus,
+.claims-bl_btn.current-transactions-btn:focus,
+.claims-bl_btn.historical-transactions-btn:focus,
+.claims-bl_btn.print-c:focus,
+.button.button-close:focus,
+.button.button-print:focus,
+.button.button-proceed:focus,
+.button.button-add:focus,
+.claims-bl_btn.mark:focus,
+.claims-bl_btn.issue:focus,
+.claims-bl_btn.add-warning:focus,
+input[type="submit"].filter-block_btn:focus,
+button.filter-block_btn:focus,
+.claims-bl_btn.edit:focus,
+button.button.button-subm:focus,
+a.button.button-subm:focus,
+input.button.button-subm:focus,
+button.button:focus,
+input.button:focus,
+a.button:focus,
+.alerts-block_btn:focus,
+.button.button-reg-link:focus,
+.f-btn.ic_pacman.mod_rectangle:focus,
+.claims-bl_c-btn:focus,
+.ui-button-text-only:focus,
+.button.button-cancel--submit:focus,
+.repayment .pay-now-btn:focus {
+  background-color: #302B4A;
+  
+}
+.claims-bl_btn.add-e:hover,
+.claims-bl_btn.add-c:hover,
+.claims-bl_btn.add-z:hover,
+.claims-bl_btn.add-acc:hover,
+.claims-bl_btn.export-btn:hover,
+.claims-bl_btn.current-transactions-btn:hover,
+.claims-bl_btn.historical-transactions-btn:hover,
+.claims-bl_btn.print-c:hover,
+.button.button-close:hover,
+.button.button-print:hover,
+.button.button-proceed:hover,
+.button.button-add:hover,
+.claims-bl_btn.mark:hover,
+.claims-bl_btn.issue:hover,
+.claims-bl_btn.add-warning:hover,
+input[type="submit"].filter-block_btn:hover,
+button.filter-block_btn:hover,
+.claims-bl_btn.edit:hover,
+button.button.button-subm:hover,
+a.button.button-subm:hover,
+input.button.button-subm:hover,
+button.button:hover,
+input.button:hover,
+a.button:hover,
+.alerts-block_btn:hover,
+.button.button-reg-link:hover,
+.f-btn.ic_pacman.mod_rectangle:hover,
+.claims-bl_c-btn:hover,
+.ui-button-text-only:hover,
+.button.button-cancel--submit:hover,
+.repayment .pay-now-btn:hover,
+.claims-bl_btn.add-e:focus,
+.claims-bl_btn.add-c:focus,
+.claims-bl_btn.add-z:focus,
+.claims-bl_btn.add-acc:focus,
+.claims-bl_btn.export-btn:focus,
+.claims-bl_btn.current-transactions-btn:focus,
+.claims-bl_btn.historical-transactions-btn:focus,
+.claims-bl_btn.print-c:focus,
+.button.button-close:focus,
+.button.button-print:focus,
+.button.button-proceed:focus,
+.button.button-add:focus,
+.claims-bl_btn.mark:focus,
+.claims-bl_btn.issue:focus,
+.claims-bl_btn.add-warning:focus,
+input[type="submit"].filter-block_btn:focus,
+button.filter-block_btn:focus,
+.claims-bl_btn.edit:focus,
+button.button.button-subm:focus,
+a.button.button-subm:focus,
+input.button.button-subm:focus,
+button.button:focus,
+input.button:focus,
+a.button:focus,
+.alerts-block_btn:focus,
+.button.button-reg-link:focus,
+.f-btn.ic_pacman.mod_rectangle:focus,
+.claims-bl_c-btn:focus,
+.ui-button-text-only:focus,
+.button.button-cancel--submit:focus,
+.repayment .pay-now-btn:focus {
+  color: #ffffff;
+}
+.claims-bl_btn.add-e:focus,
+.claims-bl_btn.add-c:focus,
+.claims-bl_btn.add-z:focus,
+.claims-bl_btn.add-acc:focus,
+.claims-bl_btn.export-btn:focus,
+.claims-bl_btn.current-transactions-btn:focus,
+.claims-bl_btn.historical-transactions-btn:focus,
+.claims-bl_btn.print-c:focus,
+.button.button-close:focus,
+.button.button-print:focus,
+.button.button-proceed:focus,
+.button.button-add:focus,
+.claims-bl_btn.mark:focus,
+.claims-bl_btn.issue:focus,
+.claims-bl_btn.add-warning:focus,
+input[type="submit"].filter-block_btn:focus,
+button.filter-block_btn:focus,
+.claims-bl_btn.edit:focus,
+button.button.button-subm:focus,
+a.button.button-subm:focus,
+input.button.button-subm:focus,
+button.button:focus,
+input.button:focus,
+a.button:focus,
+.alerts-block_btn:focus,
+.button.button-reg-link:focus,
+.f-btn.ic_pacman.mod_rectangle:focus,
+.claims-bl_c-btn:focus,
+.ui-button-text-only:focus,
+.button.button-cancel--submit:focus,
+.repayment .pay-now-btn:focus {
+  box-shadow: 0px 0px 3px 3px #26223a;
+}
+.f-btn,
+.f-btn.ic1,
+.f-btn.ic2,
+.f-btn.ic3,
+.f-btn.ic4,
+.f-btn.ic5,
+.f-btn.ic6,
+.f-btn.ic7,
+.f-btn.ic8,
+.f-btn.ic9,
+.f-btn.ic10,
+.f-btn.ic11,
+.f-btn.ic12,
+.f-btn.ic13,
+.f-btn.ic_pacman,
+.f-btn.ic_reimursement_method,
+.f-btn.ic_bill_pay,
+.claims-bl_c-btn,
+.claims-bl_c-btn.b1,
+.button {
+  background-color: #8B54A2;
+}
+.f-btn,
+.f-btn.ic1,
+.f-btn.ic2,
+.f-btn.ic3,
+.f-btn.ic4,
+.f-btn.ic5,
+.f-btn.ic6,
+.f-btn.ic7,
+.f-btn.ic8,
+.f-btn.ic9,
+.f-btn.ic10,
+.f-btn.ic_pacman,
+.f-btn.ic_reimursement_method,
+.f-btn.ic_bill_pay,
+.claims-bl_c-btn,
+.claims-bl_c-btn.b1,
+.button {
+  
+}
+.f-btn,
+.f-btn.ic1,
+.f-btn.ic2,
+.f-btn.ic3,
+.f-btn.ic4,
+.f-btn.ic5,
+.f-btn.ic6,
+.f-btn.ic7,
+.f-btn.ic8,
+.f-btn.ic9,
+.f-btn.ic10,
+.f-btn.ic_pacman,
+.f-btn.ic_reimursement_method,
+.f-btn.ic_bill_pay,
+.claims-bl_c-btn,
+.claims-bl_c-btn.b1,
+.button {
+  color: #ffffff;
+}
+.f-btn:hover,
+.f-btn.ic1:hover,
+.f-btn.ic2:hover,
+.f-btn.ic3:hover,
+.f-btn.ic4:hover,
+.f-btn.ic5:hover,
+.f-btn.ic6:hover,
+.f-btn.ic7:hover,
+.f-btn.ic8:hover,
+.f-btn.ic9:hover,
+.f-btn.ic10:hover,
+.f-btn.ic_pacman:hover,
+.f-btn.ic_reimursement_method:hover,
+.f-btn.ic_bill_pay:hover,
+.claims-bl_c-btn:hover,
+.claims-bl_c-btn.b1:hover,
+.button:hover,
+.f-btn:focus,
+.f-btn.ic1:focus,
+.f-btn.ic2:focus,
+.f-btn.ic3:focus,
+.f-btn.ic4:focus,
+.f-btn.ic5:focus,
+.f-btn.ic6:focus,
+.f-btn.ic7:focus,
+.f-btn.ic8:focus,
+.f-btn.ic9:focus,
+.f-btn.ic10:focus,
+.f-btn.ic_pacman:focus,
+.f-btn.ic_reimursement_method:focus,
+.f-btn.ic_bill_pay:focus,
+.claims-bl_c-btn:focus,
+.claims-bl_c-btn.b1:focus,
+.button:focus {
+  background-color: #302B4A;
+  
+}
+.f-btn:hover,
+.f-btn.ic1:hover,
+.f-btn.ic2:hover,
+.f-btn.ic3:hover,
+.f-btn.ic4:hover,
+.f-btn.ic5:hover,
+.f-btn.ic6:hover,
+.f-btn.ic7:hover,
+.f-btn.ic8:hover,
+.f-btn.ic9:hover,
+.f-btn.ic10:hover,
+.f-btn.ic_pacman:hover,
+.f-btn.ic_reimursement_method:hover,
+.f-btn.ic_bill_pay:hover,
+.claims-bl_c-btn:hover,
+.claims-bl_c-btn.b1:hover,
+.button:hover,
+.f-btn:focus,
+.f-btn.ic1:focus,
+.f-btn.ic2:focus,
+.f-btn.ic3:focus,
+.f-btn.ic4:focus,
+.f-btn.ic5:focus,
+.f-btn.ic6:focus,
+.f-btn.ic7:focus,
+.f-btn.ic8:focus,
+.f-btn.ic9:focus,
+.f-btn.ic10:focus,
+.f-btn.ic_pacman:focus,
+.f-btn.ic_reimursement_method:focus,
+.f-btn.ic_bill_pay:focus,
+.claims-bl_c-btn:focus,
+.claims-bl_c-btn.b1:focus,
+.button:focus {
+  color: #ffffff;
+}
+.f-btn:focus,
+.f-btn.ic1:focus,
+.f-btn.ic2:focus,
+.f-btn.ic3:focus,
+.f-btn.ic4:focus,
+.f-btn.ic5:focus,
+.f-btn.ic6:focus,
+.f-btn.ic7:focus,
+.f-btn.ic8:focus,
+.f-btn.ic9:focus,
+.f-btn.ic10:focus,
+.f-btn.ic_pacman:focus,
+.f-btn.ic_reimursement_method:focus,
+.f-btn.ic_bill_pay:focus,
+.claims-bl_c-btn:focus,
+.claims-bl_c-btn.b1:focus,
+.button:focus {
+  box-shadow: 0px 0px 3px 1px #060609;
+}
+.button.button-cancel:not(.button-cancel--submit),
+.button.button-later {
+  background-color: #302B4A;
+}
+.button.button-cancel:not(.button-cancel--submit),
+.button.button-later {
+  
+}
+.button.button-cancel:not(.button-cancel--submit),
+.button.button-later {
+  color: #ffffff;
+}
+.button.button-cancel:not(.button-cancel--submit):hover,
+.button.button-later:hover,
+.button.button-cancel:not(.button-cancel--submit):focus,
+.button.button-later:focus {
+  background-color: #8B54A2;
+  
+}
+.button.button-cancel:not(.button-cancel--submit):hover,
+.button.button-later:hover,
+.button.button-cancel:not(.button-cancel--submit):focus,
+.button.button-later:focus {
+  color: #ffffff;
+}
+.button.button-cancel:not(.button-cancel--submit):focus,
+.button.button-later:focus {
+  box-shadow: 0px 0px 3px 1px #8B54A2;
+}
+.btn_more {
+  border-color: #8B54A2;
+}
+.btn_more:hover,
+.btn_more:focus {
+  border-color: #302B4A;
+  background-color: #302B4A;
+  
+}
+.btn_more:hover,
+.btn_more:focus {
+  color: #ffffff;
+}
+.b-irs-limit,
+.b-irs-limit:before {
+  background-color: #312B4A;
+  
+}
+.b-irs-limit,
+.b-irs-limit:before {
+  color: #ffffff;
+}
+/* Modal title background color */
+
+.popup-form_title,
+.ui-dialog-titlebar,
+.popup-usual-title {
+  background-color: #B721FF;
+  
+}
+.popup-form_title,
+.ui-dialog-titlebar,
+.popup-usual-title {
+  color: #ffffff;
+}
+/* Toggle color */
+
+.radio-buttons input[type=radio]:checked + label,
+.radio-buttons-multiple-lines input[type=radio]:checked + .radio-buttons_item-inner label,
+.radio-tabs__item[aria-selected="true"],
+.popup-tabs .ui-tabs .ui-tabs-nav li.ui-tabs-active {
+  background-color: #B6B5C7;
+  
+}
+.radio-buttons input[type=radio]:checked + label,
+.radio-buttons-multiple-lines input[type=radio]:checked + .radio-buttons_item-inner label,
+.radio-tabs__item[aria-selected="true"],
+.popup-tabs .ui-tabs .ui-tabs-nav li.ui-tabs-active {
+  color: #302B4A;
+}
+/* Tips icon & title color */
+
+.js-tooltip,
+.js-tooltip-icon {
+  background-color: #312B4A;
+}
+.js-tooltip:before,
+.js-tooltip-icon:before {
+  
+}
+.js-tooltip:before,
+.js-tooltip-icon:before {
+  color: #ffffff;
+}
+.b-tooltip-title {
+  background-color: #312B4A;
+  
+}
+.b-tooltip-title {
+  color: #ffffff;
+}
+/* Note background color */
+
+.protect-bl,
+.popup-form_hint,
+.popup-form_hint.big {
+  background-color: #F8F7F9;
+  
+}
+.protect-bl,
+.popup-form_hint,
+.popup-form_hint.big {
+  color: #302B4A;
+}
+.protect-bl strong,
+.popup-form_hint strong,
+.popup-form_hint.big strong {
+  
+}
+.protect-bl strong,
+.popup-form_hint strong,
+.popup-form_hint.big strong {
+  color: #1b182a;
+}
+/* Alert background color */
+
+.popup-form_alert,
+.msg-hand-box {
+  background-color: #B6B5C7;
+  
+}
+.popup-form_alert,
+.msg-hand-box {
+  color: #302B4A;
+}
+.popup-form_hint.popup-form_alert:before,
+.popup-form_hint.msg-hand-box:before {
+  color: #373647;
+}
+/* Info background color */
+
+.popup-form_info {
+  background-color: #F8F7F9;
+  
+}
+.popup-form_info {
+  color: #302B4A;
+}
+.popup-form_hint.popup-form_info:before {
+  color: #78678a;
+}
+/* Error title background color & text color */
+
+/* Textfield notification background color */
+
+.popup-form_error-title,
+.popup-form_error-title span:after {
+  background-color: #B721FF;
+  
+}
+.popup-form_error-title,
+.popup-form_error-title span:after {
+  color: #ffffff;
+}
+.popup-row_inp-error span,
+.field-validation-error,
+.validationMessage {
+  background-color: #B6B5C7;
+  
+}
+.popup-row_inp-error span,
+.field-validation-error,
+.validationMessage {
+  color: #2e2d3c;
+}
+.b-popup-cancel_payment .popup-form_hint .icon-wcp-font-alert {
+  
+}
+.b-popup-cancel_payment .popup-form_hint .icon-wcp-font-alert {
+  color: #2e2d3c;
+}
+/* Active step color */
+
+.steps-box .active,
+.steps-box .active:before,
+.steps-box.mod_register .step-1.active,
+.steps-box.mod_register .step-1.active:before,
+.steps-box.mod_register .step-2.active,
+.steps-box.mod_register .step-2.active:before,
+.steps-box.mod_register .step-3.active,
+.steps-box.mod_register .step-3.active:before,
+.steps-box.mod_register .step-4.active,
+.steps-box.mod_register .step-4.active:before {
+  background-color: #18F2FF;
+  
+}
+.steps-box .active,
+.steps-box .active:before,
+.steps-box.mod_register .step-1.active,
+.steps-box.mod_register .step-1.active:before,
+.steps-box.mod_register .step-2.active,
+.steps-box.mod_register .step-2.active:before,
+.steps-box.mod_register .step-3.active,
+.steps-box.mod_register .step-3.active:before,
+.steps-box.mod_register .step-4.active,
+.steps-box.mod_register .step-4.active:before {
+  color: #ffffff;
+}
+.steps-box .active:after,
+.steps-box.mod_register .step-1.active:after,
+.steps-box.mod_register .step-2.active:after,
+.steps-box.mod_register .step-3.active:after,
+.steps-box.mod_register .step-4.active:after {
+  border-color: transparent transparent transparent #18F2FF;
+}
+/* Notification settings selected option color */
+
+.ch-item.big-check-circle input[type=checkbox]:checked + label:after,
+.ch-item.big-check-circle input[type=radio]:checked + label:after,
+.ch-item.small-check-circle input[type=checkbox]:checked ~ label:after,
+.ch-item.small-check-circle input[type=radio]:checked ~ label:after {
+  background-color: #18F2FF;
+}
+/* Sign in button & hover color */
+
+.enter-block a.sign-in,
+.enter-block-button-sample.sign-in,
+.enter-block a.sign-out,
+.enter-block-button-sample.sign-out,
+.user-name-form button.button-subm {
+  background-color: #8B54A2;
+  -webkit-box-shadow: #8B54A2 0 0 3px;
+  -moz-box-shadow: #8B54A2 0 0 3px;
+  box-shadow: #8B54A2 0 0 3px;
+}
+.enter-block a.sign-in,
+.enter-block-button-sample.sign-in,
+.enter-block a.sign-out,
+.enter-block-button-sample.sign-out,
+.user-name-form button.button-subm {
+  
+}
+.enter-block a.sign-in,
+.enter-block-button-sample.sign-in,
+.enter-block a.sign-out,
+.enter-block-button-sample.sign-out,
+.user-name-form button.button-subm {
+  color: #ffffff;
+}
+.enter-block a.sign-in:hover,
+.enter-block a.sign-out:hover,
+.user-name-form button.button-subm:hover,
+a.enter-block-button-sample:hover,
+.enter-block a.sign-in:focus,
+.enter-block a.sign-out:focus,
+.user-name-form button.button-subm:focus,
+a.enter-block-button-sample:focus {
+  background-color: #302B4A;
+  -webkit-box-shadow: #302B4A 0 0 3px;
+  -moz-box-shadow: #302B4A 0 0 3px;
+  box-shadow: #302B4A 0 0 3px;
+  
+}
+.enter-block a.sign-in:hover,
+.enter-block a.sign-out:hover,
+.user-name-form button.button-subm:hover,
+a.enter-block-button-sample:hover,
+.enter-block a.sign-in:focus,
+.enter-block a.sign-out:focus,
+.user-name-form button.button-subm:focus,
+a.enter-block-button-sample:focus {
+  color: #ffffff;
+}
+.enter-block a.sign-in:focus,
+.enter-block a.sign-out:focus,
+.user-name-form button.button-subm:focus,
+a.enter-block-button-sample:focus {
+  box-shadow: #302B4A 0 0 8px;
+}
+/* Register button & hover color */
+
+.enter-block a.reg,
+.enter-block-button-sample.reg,
+.reg-sm-bl .button-reg-link {
+  background-color: #302B4A;
+  -webkit-box-shadow: #302B4A 0 0 3px;
+  -moz-box-shadow: #302B4A 0 0 3px;
+  box-shadow: #302B4A 0 0 3px;
+}
+.enter-block a.reg,
+.enter-block-button-sample.reg,
+.reg-sm-bl .button-reg-link {
+  
+}
+.enter-block a.reg,
+.enter-block-button-sample.reg,
+.reg-sm-bl .button-reg-link {
+  color: #ffffff;
+}
+.enter-block a.reg:hover,
+.reg-sm-bl .button-reg-link:hover,
+.enter-block a.reg:focus,
+.reg-sm-bl .button-reg-link:focus {
+  background-color: #8B54A2;
+  -webkit-box-shadow: #8B54A2 0 0 3px;
+  -moz-box-shadow: #8B54A2 0 0 3px;
+  box-shadow: #8B54A2 0 0 3px;
+  
+}
+.enter-block a.reg:hover,
+.reg-sm-bl .button-reg-link:hover,
+.enter-block a.reg:focus,
+.reg-sm-bl .button-reg-link:focus {
+  color: #ffffff;
+}
+.enter-block a.reg:focus,
+.reg-sm-bl .button-reg-link:focus {
+  box-shadow: #302B4A 0 0 8px;
+}
+/* Resources background gradients */
+
+.res-blocks_link.bg {
+  background-image: url("../../images/res_blocks_link_bg/calc-azure-blue.jpg");
+}
+.res-blocks_link.bg1 {
+  background-image: url("../../images/res_blocks_link_bg/hands-seagrass-green.jpg");
+}
+.res-blocks_link.bg2 {
+  background-image: url("../../images/res_blocks_link_bg/phone-frost-blue.jpg");
+}
+/* Advantage title text color */
+
+.advant-block h1 {
+  color: #302B4A;
+}
+/* Homepage: Elements text color & hover */
+
+.advant-block_col {
+  color: #302B4A;
+}
+.advant-block_col:hover,
+.advant-block_col:hover em {
+  color: #312B4A;
+}
+/* Homepage: Element icon hover color */
+
+.advant-block_col:before {
+  color: #8B54A2;
+}
+.advant-block_col:hover:before {
+  color: #8B54A2;
+}
+/* Latest news background gradient */
+
+.latest-news_text {
+  background-image: url("../../images/latest_news_text_bg/news-light-blue.png");
+}
+/* Latest news arrows background */
+
+.latest-news_arrow {
+  background-image: url("../../images/latest_news_arrow_bg/arrow-green-dark.png");
+}
+/* New variables for buttons and table rows (08/08/2016) */
+
+/* Buttons font family and text transform */
+
+.claims-bl_btn.add-e,
+.alerts-block_btn,
+.btn_more,
+.claims-bl_btn.add-c,
+.claims-bl_btn.add-z,
+.claims-bl_btn.add-acc,
+.claims-bl_btn.export-btn,
+.claims-bl_btn.current-transactions-btn,
+.claims-bl_btn.historical-transactions-btn,
+.claims-bl_btn.print-c,
+.button.button-close,
+.button.button-print,
+.button.button-proceed,
+.button.button-add,
+.claims-bl_btn.mark,
+.claims-bl_btn.issue,
+.claims-bl_btn.add-warning,
+input[type="submit"].filter-block_btn,
+.claims-bl_btn.edit,
+a.button.button-subm,
+button.button.button-subm,
+input.button.button-subm,
+.button.button-reg-link,
+.f-btn.ic_pacman.mod_rectangle,
+.f-btn,
+.f-btn.ic1,
+.f-btn.ic2,
+.f-btn.ic3,
+.f-btn.ic4,
+.f-btn.ic5,
+.f-btn.ic6,
+.f-btn.ic7,
+.f-btn.ic8,
+.f-btn.ic9,
+.f-btn.ic10,
+.f-btn.ic_pacman,
+.f-btn.ic_reimursement_method,
+.f-btn.ic_bill_pay,
+.claims-bl_c-btn,
+.button,
+.ui-button-text-only,
+.mobile-benefit-block .unit_title_about_link {
+  text-transform: uppercase;
+  font-family: "Oxygen";
+}
+/* Sheet rows colors */
+
+/* Paid colors */
+
+.claims-bl_sheet_row.color .claims-bl_sheet_row_bg:after,
+.transact-item .claims-bl_sheet_row_bg.color:after,
+.ch-item.ch-color0 label:before {
+  background-color: #B721FF;
+}
+.claims-bl_sheet_row.color .claims-bl_sheet_row_bg,
+.transact-item .claims-bl_sheet_row_bg.color,
+.alert-item {
+  background: #F8F7F9;
+  background: -moz-linear-gradient(left, #F8F7F9 1%, #fff 100%);
+  background: -webkit-linear-gradient(left, #F8F7F9 1%, #fff 100%);
+  background: linear-gradient(to right, #F8F7F9 1%, #fff 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#F8F7F9', endColorstr='#fff', GradientType=1);
+}
+.claims-bl_sheet_row.color .claims-bl_sheet_col:first-child,
+.claims-bl_sheet_row.color .claims-bl_sheet_col:first-child div {
+  
+}
+.claims-bl_sheet_row.color .claims-bl_sheet_col:first-child,
+.claims-bl_sheet_row.color .claims-bl_sheet_col:first-child div {
+  color: #302B4A;
+}
+/* Required colors */
+
+.claims-bl_sheet_row.color1 .claims-bl_sheet_row_bg:after,
+.transact-item .claims-bl_sheet_row_bg.color1:after,
+.ch-item.ch-color1 label:before {
+  background-color: #18F2FF;
+}
+.claims-bl_sheet_row.color1 .claims-bl_sheet_row_bg,
+.transact-item .claims-bl_sheet_row_bg.color1 {
+  background: #F8F7F9;
+  background: -moz-linear-gradient(left, #F8F7F9 1%, #fff 100%);
+  background: -webkit-linear-gradient(left, #F8F7F9 1%, #fff 100%);
+  background: linear-gradient(to right, #F8F7F9 1%, #fff 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#F8F7F9', endColorstr='#fff', GradientType=1);
+}
+.claims-bl_sheet_row.color1 .claims-bl_sheet_col:first-child,
+.claims-bl_sheet_row.color1 .claims-bl_sheet_col:first-child div {
+  
+}
+.claims-bl_sheet_row.color1 .claims-bl_sheet_col:first-child,
+.claims-bl_sheet_row.color1 .claims-bl_sheet_col:first-child div {
+  color: #302B4A;
+}
+/* Pending colors, same as .color4, used on TransactionsList only. Separated from .color4 because it's possible that transactions color should differ from contributions and investments */
+
+.claims-bl_sheet_row.color2 .claims-bl_sheet_row_bg:after,
+.transact-item .claims-bl_sheet_row_bg.color2:after,
+.ch-item.ch-color2 label:before {
+  background-color: #B6B5C7;
+}
+.claims-bl_sheet_row.color2 .claims-bl_sheet_row_bg,
+.transact-item .claims-bl_sheet_row_bg.color2,
+.alert-item {
+  background: #F8F7F9;
+  background: -moz-linear-gradient(left, #F8F7F9 1%, #fff 100%);
+  background: -webkit-linear-gradient(left, #F8F7F9 1%, #fff 100%);
+  background: linear-gradient(to right, #F8F7F9 1%, #fff 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#F8F7F9', endColorstr='#fff', GradientType=1);
+}
+.claims-bl_sheet_row.color2 .claims-bl_sheet_col:first-child,
+.claims-bl_sheet_row.color2 .claims-bl_sheet_col:first-child div {
+  
+}
+.claims-bl_sheet_row.color2 .claims-bl_sheet_col:first-child,
+.claims-bl_sheet_row.color2 .claims-bl_sheet_col:first-child div {
+  color: #302B4A;
+}
+/* Denied colors */
+
+.claims-bl_sheet_row.color3 .claims-bl_sheet_row_bg:after,
+.transact-item .claims-bl_sheet_row_bg.color3:after,
+.ch-item.ch-color3 label:before {
+  background-color: #B721FF;
+}
+.claims-bl_sheet_row.color3 .claims-bl_sheet_row_bg,
+.transact-item .claims-bl_sheet_row_bg.color3 {
+  background: #F8F7F9;
+  background: -moz-linear-gradient(left, #F8F7F9 1%, #fff 100%);
+  background: -webkit-linear-gradient(left, #F8F7F9 1%, #fff 100%);
+  background: linear-gradient(to right, #F8F7F9 1%, #fff 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#F8F7F9', endColorstr='#fff', GradientType=1);
+}
+.claims-bl_sheet_row.color3 .claims-bl_sheet_col:first-child,
+.claims-bl_sheet_row.color3 .claims-bl_sheet_col:first-child div {
+  
+}
+.claims-bl_sheet_row.color3 .claims-bl_sheet_col:first-child,
+.claims-bl_sheet_row.color3 .claims-bl_sheet_col:first-child div {
+  color: #302B4A;
+}
+/* Pending colors, same as .color2, used on ContributionsPendingList and InvestmentsForAccount */
+
+.claims-bl_sheet_row.color4 .claims-bl_sheet_row_bg:after,
+.transact-item .claims-bl_sheet_row_bg.color4:after,
+.ch-item.ch-color4 label:before {
+  background-color: #B6B5C7;
+}
+.claims-bl_sheet_row.color4 .claims-bl_sheet_row_bg,
+.transact-item .claims-bl_sheet_row_bg.color4 {
+  background: #F8F7F9;
+  background: -moz-linear-gradient(left, #F8F7F9 1%, #fff 100%);
+  background: -webkit-linear-gradient(left, #F8F7F9 1%, #fff 100%);
+  background: linear-gradient(to right, #F8F7F9 1%, #fff 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#F8F7F9', endColorstr='#fff', GradientType=1);
+}
+.claims-bl_sheet_row.color4 .claims-bl_sheet_col:first-child,
+.claims-bl_sheet_row.color4 .claims-bl_sheet_col:first-child div {
+  
+}
+.claims-bl_sheet_row.color4 .claims-bl_sheet_col:first-child,
+.claims-bl_sheet_row.color4 .claims-bl_sheet_col:first-child div {
+  color: #302B4A;
+}
+/* Action Needed colors */
+
+.claims-bl_sheet_row.color5 .claims-bl_sheet_row_bg:after,
+.transact-item .claims-bl_sheet_row_bg.color5:after,
+pharmacy-item::before,
+.alert-item.bg:after,
+.ch-item.ch-color5 label:before {
+  background-color: #18F2FF;
+}
+.claims-bl_sheet_row.color5 .claims-bl_sheet_row_bg,
+.transact-item .claims-bl_sheet_row_bg.color5,
+.alert-item.bg {
+  background: #F8F7F9;
+  background: -moz-linear-gradient(left, #F8F7F9 1%, #fff 100%);
+  background: -webkit-linear-gradient(left, #F8F7F9 1%, #fff 100%);
+  background: linear-gradient(to right, #F8F7F9 1%, #fff 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#F8F7F9', endColorstr='#fff', GradientType=1);
+}
+pharmacy-item {
+  background: #F8F7F9;
+  background: -moz-linear-gradient(left, #F8F7F9 1%, #fff 50%);
+  background: -webkit-linear-gradient(left, #F8F7F9 1%, #fff 50%);
+  background: linear-gradient(to right, #F8F7F9 1%, #fff 50%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#F8F7F9', endColorstr='#fff', GradientType=1);
+}
+.claims-bl_sheet_row.color5 .claims-bl_sheet_col:first-child,
+.claims-bl_sheet_row.color5 .claims-bl_sheet_col:first-child div {
+  
+}
+.claims-bl_sheet_row.color5 .claims-bl_sheet_col:first-child,
+.claims-bl_sheet_row.color5 .claims-bl_sheet_col:first-child div {
+  color: #302B4A;
+}
+.claim-cert-block {
+  color: #58595B;
+  background-color: #FFF8DC;
+  border: 1px solid #FFB01F;
+}
+.faq-item {
+  background-color: #F8F7F9;
+}
+.faq-item.open {
+  background-color: #F8F7F9;
+}
+/* Profile mini */
+
+.profile-widget-data-item:nth-child(1) {
+  background-color: #8B54A2;
+}
+.profile-widget-data-item:nth-child(2) {
+  background-color: #8B54A2;
+}
+.profile-widget-data-item:nth-child(3) {
+  background-color: #717DFF;
+}
+.profile-widget-data-item:nth-child(4) {
+  background-color: #42BAFF;
+}
+.profile-widget-data-item {
+  background-color: #18F2FF;
+  color: #ffffff;
+}
+.profile-widget-data-item.not-filled .profile-widget-data-item-title,
+.profile-widget-data-item.not-filled .profile-widget-data-item-value {
+  color: #B6B5C7;
+}
+.profile-widget-progress-bar {
+  background-color: #8B54A2;
+}
+.progress-bar-inner {
+  background-color: #B6B5C7;
+}
+.progress-bar {
+  border: 1px solid #B6B5C7;
+}
+.profile-widget-complete-text {
+  background-color: #8B54A2;
+  color: #8B54A2;
+}
+.profile-widget-complete-info .js-tooltip-icon,
+.profile-widget-tooltip-content {
+  color: #8B54A2;
+  background-color: #B6B5C7;
+}
+.profile-widget-complete-info .js-tooltip-icon:before {
+  color: #8B54A2;
+}
+.profile-widget-tooltip-content:after {
+  border-color: transparent transparent #B6B5C7 transparent;
+}
+/* Widget */
+
+.unit_title {
+  background: #F8F7F9;
+}
+/* easy hsa transfer shortcut widget */
+
+.easy-hsa-transfer-shortcut {
+  background-color: #B6B5C7;
+}
+.easy-hsa-transfer-shortcut,
+.easy-hsa-transfer-shortcut .unit_content {
+  
+}
+.easy-hsa-transfer-shortcut,
+.easy-hsa-transfer-shortcut .unit_content {
+  color: #302B4A;
+}
+/* easy hsa transfer shortcut widget: button */
+
+.easy-hsa-transfer-shortcut .btn-with-right-arrow {
+  background-color: #302B4A;
+}
+.easy-hsa-transfer-shortcut .btn-with-right-arrow:focus {
+  box-shadow: 0px 0px 3px 3px #0d1707;
+}
+.easy-hsa-transfer-shortcut .btn-with-right-arrow {
+  
+}
+.easy-hsa-transfer-shortcut .btn-with-right-arrow {
+  color: #ffffff;
+}
+.easy-hsa-transfer-shortcut .btn-with-right-arrow:before {
+  background-color: #26223a;
+}
+.easy-hsa-transfer-shortcut .btn-with-right-arrow:hover,
+.easy-hsa-transfer-shortcut .btn-with-right-arrow:focus {
+  background-color: #1b182a;
+}
+.easy-hsa-transfer-shortcut .btn-with-right-arrow:hover:before,
+.easy-hsa-transfer-shortcut .btn-with-right-arrow:focus:before {
+  background-color: #110f1a;
+}
+.eligible-exp-grid_top {
+  background-color: #424242;
+  color: #F2F2F2;
+}
+/* Other colors */
+
+.claims-bl_sheet_row.color6 .claims-bl_sheet_row_bg:after,
+.transact-item .claims-bl_sheet_row_bg.color6:after,
+.alert-item:after,
+.ch-item.ch-color6 label:before {
+  background-color: #B6B5C7;
+}
+.claims-bl_sheet_row.color6 .claims-bl_sheet_row_bg,
+.transact-item .claims-bl_sheet_row_bg.color6,
+.alert-item {
+  background: #F8F7F9;
+  background: -moz-linear-gradient(left, #F8F7F9 1%, #fff 100%);
+  background: -webkit-linear-gradient(left, #F8F7F9 1%, #fff 100%);
+  background: linear-gradient(to right, #F8F7F9 1%, #fff 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#F8F7F9', endColorstr='#fff', GradientType=1);
+}
+.claims-bl_sheet_row.color6 .claims-bl_sheet_col:first-child,
+alert-iten:first-child,
+.claims-bl_sheet_row.color6 .claims-bl_sheet_col:first-child div {
+  
+}
+.claims-bl_sheet_row.color6 .claims-bl_sheet_col:first-child,
+alert-iten:first-child,
+.claims-bl_sheet_row.color6 .claims-bl_sheet_col:first-child div {
+  color: #302B4A;
+}
+.transact-item_col.c1,
+.transact-item_col.c3,
+.transact-item_col.c4,
+.transact-item_col.c4 span {
+  color: #302B4A;
+}
+/* Calculator Styles (Primary Color) */
+
+/*.status li.active {
+	color: @top_line !important;
+}*/
+
+/*.pcsSurvey .questionPanel h2,
+.label,
+.resultsInput label,
+.resultsInput input {
+	color: @top_line !important;
+}*/
+
+/*.pcsSurvey .buttonsPanel,
+#slider,
+#slider-range-max {
+	background: @top_line !important;
+}*/
+
+/* Calculator and Tutorial Styles */
+
+.pcsSurvey .status li.active {
+  border-bottom: 5px solid #717DFF;
+  color: #717DFF !important;
+}
+.pcsSurvey .questionPanel h2,
+.pcsSurvey .questionPanel .compare h5,
+.pcsSurvey .questionPanel .compare span,
+.pcsSurvey .label,
+.pcsSurvey .resultsInput label,
+.pcsSurvey .resultsInput input,
+.pcsSurvey .resultsInput span,
+.pcsSurvey .questionPanel .extraContribution,
+.pcsSurvey .questionPanel .hBar_end .valued,
+.pcsSurvey .questionPanel .hBar_fill_savings .valued {
+  color: #717DFF !important;
+}
+.pcsSurvey .enter input,
+.pcsSurvey .Uinput .btn,
+.pcsSurvey .Uinput .btn-primary,
+.pcsSurvey .Uinput .btn-primary:active:hover {
+  color: #717DFF !important;
+}
+.pcsSurvey .open > .dropdown-toggle.btn-primary:focus,
+.pcsSurvey .open > .dropdown-toggle.btn-primary:hover {
+  color: #717DFF !important;
+}
+.pcsSurvey .alertBox h3,
+.pcsSurvey .alertBox a {
+  color: #717DFF !important;
+}
+.pcsSurvey .buttonsPanel,
+#slider,
+#slider-range-max,
+.pcsSurvey .questionPanel .vs div,
+.pcsSurvey .questionPanel .costContainerMonthly,
+.pcsSurvey .questionPanel .hBar_fill_savings {
+  background: #717DFF !important;
+}
+.pcsSurvey #profile path {
+  fill: #717DFF !important;
+}
+.pcsSurvey h7 {
+  border-left: 15px solid #717DFF !important;
+}
+.pcsSurvey .row .col-sm-9 h2 {
+  border-left: 15px solid #717DFF !important;
+  font-size: 11px !important;
+  text-transform: uppercase;
+  letter-spacing: 5px;
+  padding-left: 10px !important;
+  margin-bottom: 12px !important;
+  color: #555 !important;
+  line-height: 1.5 !important;
+}
+/* buttons order */
+
+.buttons-order .button,
+.buttons-order .filter-block_btn,
+.buttons-order:not(.go-next) .claims-bl_btn {
+  
+}
+/* sitemap */
+
+.sitemap,
+.sitemap a {
+  color: #302B4A;
+}
+/* Mobile buttons */
+
+@media screen and (max-width: 767px) {
+  /* NOTE: buttons in the block "go-next" must be floated for mobiles only, because in desktop resolutions they situated one above the other */
+  
+  .go-next.buttons-order p {
+    
+  }
+  .popup-form .popup_buttons.buttons-order .button:nth-child(2n),
+  .popup-contrib .popup_buttons.buttons-order .button:nth-child(2n),
+  .form-block .popup_buttons.buttons-order .button:nth-child(2n),
+  .popup-exceed-amount .popup_buttons .button:nth-child(2n),
+  .claim-succ .popup_buttons.buttons-order .button:nth-child(2n),
+  .claims-bl_buttons.buttons-order .claims-bl_btn:nth-child(2n),
+  .add-provider-form_content .popup_buttons.buttons-order .button:nth-child(2n),
+  .popup-del-exp .popup_buttons.buttons-order .button:nth-child(2n),
+  .deductible-status .deductible-status-buttons.buttons-order .button:nth-child(2n),
+  .go-next.buttons-order p:nth-child(2n),
+  .filter-block .popup_buttons.buttons-order .filter-block_btn,
+  .sign-in-form.secq-form .popup_buttons.buttons-order .button:nth-child(2n),
+  .sign-in-form.password-form .popup_buttons.buttons-order .button:nth-child(2n),
+  .sign-in-form.username-retrieval-form .popup_buttons.buttons-order .button:nth-child(2n),
+  .sign-in-form.auth-confirmation .popup_buttons.buttons-order .button:nth-child(2n),
+  .medical-claim-details-popup .popup_buttons.three-buttons.buttons-order .button.button-subm,
+  .table-with-buttons-btns.buttons-order .button:nth-child(2n) {
+    
+  }
+  .popup-form .popup_buttons.buttons-order .button:nth-child(2n),
+  .popup-contrib .popup_buttons.buttons-order .button:nth-child(2n),
+  .form-block .popup_buttons.buttons-order .button:nth-child(2n),
+  .popup-exceed-amount .popup_buttons .button:nth-child(2n),
+  .claim-succ .popup_buttons.buttons-order .button:nth-child(2n),
+  .claims-bl_buttons.buttons-order .claims-bl_btn:nth-child(2n),
+  .add-provider-form_content .popup_buttons.buttons-order .button:nth-child(2n),
+  .popup-del-exp .popup_buttons.buttons-order .button:nth-child(2n),
+  .deductible-status .deductible-status-buttons.buttons-order .button:nth-child(2n),
+  .go-next.buttons-order p:nth-child(2n),
+  .filter-block .popup_buttons.buttons-order .filter-block_btn,
+  .sign-in-form.secq-form .popup_buttons.buttons-order .button:nth-child(2n),
+  .sign-in-form.password-form .popup_buttons.buttons-order .button:nth-child(2n),
+  .sign-in-form.username-retrieval-form .popup_buttons.buttons-order .button:nth-child(2n),
+  .sign-in-form.auth-confirmation .popup_buttons.buttons-order .button:nth-child(2n),
+  .medical-claim-details-popup .popup_buttons.three-buttons.buttons-order .button.button-subm,
+  .table-with-buttons-btns.buttons-order .button:nth-child(2n) {
+    margin-right: 0;
+  }
+  .filter-block .filter-block_btn {
+    margin-right: 0;
+    margin-left: 4%;
+  }
+  /* Page title color */
+  
+  .top-line,
+  .mfp-alert-popup .popup-form_title,
+  .choice-block_drop {
+    background-color: #302B4A;
+  }
+  /* Page title text color */
+  
+  .title-page,
+  .mfp-alert-popup .popup-form_title,
+  .choice-block_act,
+  .choice-block_act a,
+  .choice-block_act:after {
+    
+  }
+  .title-page,
+  .mfp-alert-popup .popup-form_title,
+  .choice-block_act,
+  .choice-block_act a,
+  .choice-block_act:after {
+    color: #ffffff;
+  }
+}

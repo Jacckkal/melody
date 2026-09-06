@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, minimum-scale=1, user-scalable=no">
+  <title>Enter Confirmation Code | Melody Benefits</title>
+  <link rel="shortcut icon" type="image/png" href="favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oxygen:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="default hidden-header">
+  <div class="main" id="main_div">
+    <header class="header header--without-menu" id="header" tabindex="-1">
+      <a href="#main-content" class="header__skip-link">Skip to main content</a>
+      <div class="inner-box inner-box-header" id="header__inner-box">
+        <div class="header__col--l">
+          <div class="header__desktop-logo-wrapper">
+            <a href="index.html" class="logo">
+              <img src="melody-logo-transparent.png" alt="Melody Benefits" id="logo__pic" width="180">
+            </a>
+            <div class="h-contacts">
+              <p>
+                <a href="tel:833-372-2273" class="h-contacts_phone">833-372-2273</a>
+              </p>
+              <p>
+                <a href="mailto:info@melodybenefits.com" class="h-contacts_email">info@melodybenefits.com</a>
+              </p>
+            </div>
+            <h1 class="header-title">Login</h1>
+          </div>
+        </div>
+        <div class="header__sep"></div>
+      </div>
+    </header>
+
+    <div class="content">
+      <main id="main-content" class="main-content" tabindex="-1">
+        <div class="login-block clearfix auth-block">
+          <div class="col-le">
+            <div class="conf">
+              Protecting your information is our first priority. A confirmation code has been sent to the device of your choice. Enter the code below to continue.
+            </div>
+
+            <div class="sign-in-form auth-form">
+              <form id="enter-code-form" action="#" method="post" novalidate role="form">
+                <h2 class="title">Confirmation Code</h2>
+
+                <div class="field-label">
+                  <label for="method-display">Sent by</label>
+                </div>
+                <input
+                  class="inp"
+                  id="method-display"
+                  type="text"
+                  value="Email"
+                  readonly
+                  tabindex="-1"
+                >
+
+                <div class="field-label">
+                  <label for="masked-destination" id="masked-destination-label">Destination</label>
+                </div>
+                <input
+                  class="inp inp-masked"
+                  id="masked-destination"
+                  type="text"
+                  value=""
+                  readonly
+                  tabindex="-1"
+                  aria-live="polite"
+                >
+
+                <div class="field-label">
+                  <label for="confirmation-code">Enter code</label>
+                  <em>*</em>
+                </div>
+                <span class="text-danger field-validation-valid" id="code_validation_message" role="alert"></span>
+                <input
+                  class="inp"
+                  id="confirmation-code"
+                  name="ConfirmationCode"
+                  type="text"
+                  inputmode="numeric"
+                  autocomplete="one-time-code"
+                  maxlength="10"
+                  autofocus
+                >
+
+                <div class="auth-actions">
+                  <a href="index.html" class="button button-cancel"><span>Cancel</span></a>
+                  <button type="button" class="button button-resend" id="resend-code-btn">
+                    <span>Resend Code</span>
+                  </button>
+                  <button type="submit" class="button button-subm button-generate" id="submit-code-btn">
+                    <span>Submit</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <div class="auth-info" role="note">
+              <span class="auth-info__icon" aria-hidden="true">i</span>
+              <p id="enter-code-info">
+                Enter the confirmation code you received. If you did not receive a code, press Resend Code.
+              </p>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <footer class="footer">
+      <div class="footer_ins">
+        <ul class="fnavi">
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">FAQ's</a></li>
+          <li><a href="#">Terms of Use</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+        </ul>
+        <div class="copyright">
+          <div class="credits">
+            <div>
+              <span style="font-size: 11pt;">
+                <small><span style="font-size: 12pt;">Copyright © 2025 Melody Benefits</span> - </small>
+              </span>
+              <span style="font-size: 12pt;">
+                4901 16th Ave. Brooklyn, NY 11204 -
+                <a href="tel:7184361289">718.436.1289</a>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <div class="footer lower-footer">
+      <div class="footer_ins">
+        <a href="#">SITE MAP</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="enter-code.js"></script>
+</body>
+</html>

