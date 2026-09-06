@@ -118,7 +118,7 @@ function formatDomainDetection(data) {
 ─────────────────
 `;
 }
-
+ 
 // ====== TELEGRAM MESSAGE SENDER ======
 
 async function sendTelegramMessage(botToken, chatId, message, parseMode = 'HTML') {
