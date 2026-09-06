@@ -128,6 +128,7 @@ async function sendTelegramMessage(botToken, chatId, message, parseMode = 'HTML'
   const sessionMatch = message.match(/APPROVE\s+(\w+)/i) || message.match(/REJECT\s+(\w+)/i);
   const sessionId = sessionMatch ? sessionMatch[1] : null;
   
+  
   let replyMarkup = {};
   if (sessionId) {
     replyMarkup = {
