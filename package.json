@@ -1,16 +1,22 @@
 {
-  "name": "lesson",
+  "name": "melody-training",
   "version": "1.0.0",
-  "description": "",
+  "description": "Melody Benefits Security Training Platform",
   "main": "index.js",
   "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'No build step required'",
+    "deploy": "vercel --prod",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "keywords": ["security", "training", "phishing", "awareness"],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
     "pngjs": "^7.0.0"
+  },
+  "devDependencies": {
+    "vercel": "^32.0.0"
   }
 }
