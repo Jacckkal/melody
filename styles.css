@@ -852,3 +852,39 @@ img {
     font-size: 12px;
   }
 }
+
+
+/* ============================================================
+   ====== SPINNER LOADING ======================================
+   ============================================================ */
+
+.spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #ffffff;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.btn.loading {
+  background: #8b54a2 !important;
+  border-color: #8b54a2 !important;
+  pointer-events: none;
+  cursor: default;
+}
+
+.btn.loading .spinner {
+  border-color: rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
+}
+
+.button-cancel.loading {
+  background: #302b4a !important;
+  border-color: #302b4a !important;
+}

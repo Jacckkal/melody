@@ -1,5 +1,13 @@
 // api/telegram-webhook.js
 export default async function handler(req, res) {
+  // Handle both GET and POST
+  if (req.method === 'GET') {
+    return res.status(200).json({ 
+      status: 'Webhook is active',
+      timestamp: new Date().toISOString()
+    });
+  }
+
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -12,7 +20,7 @@ export default async function handler(req, res) {
   }
 
   const update = req.body;
-  console.log('Webhook received:', JSON.stringify(update, null, 2));
+  console.log('📨 Webhook received:', JSON.stringify(update, null, 2));
 
   // ====== HANDLE BUTTON CLICKS ======
   if (update.callback_query) {
@@ -22,49 +30,89 @@ export default async function handler(req, res) {
     const messageId = callback.message.message_id;
     const callbackId = callback.id;
     
+    // Parse: approve_SESS_123 or reject_SESS_123
     const parts = data.split('_');
     const action = parts[0];
     const sessionId = parts.slice(1).join('_');
 
-    console.log(`Callback: ${action} for ${sessionId}`);
+    console.log(`🔔 Callback: ${action} for ${sessionId}`);
 
-    await answerCallbackQuery(callbackId, `Processing ${action}...`);
+    // Acknowledge callback immediately
+    try {
+      await fetch(`https://api.telegram.org/bot${botToken}/answerCallbackQuery`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          callback_query_id: callbackId,
+          text: `Processing ${action}...`
+        })
+      });
+    } catch (e) {
+      console.error('Answer callback error:', e);
+    }
 
+    // Get pending approvals from global storage
     const pendingApprovals = global.pendingApprovals || new Map();
     
     if (pendingApprovals.has(sessionId)) {
       const entry = pendingApprovals.get(sessionId);
       const decision = action === 'approve' ? 'approved' : 'rejected';
       pendingApprovals.set(sessionId, { ...entry, status: decision });
+      global.pendingApprovals = pendingApprovals;
       
-      console.log(`Session ${sessionId} ${decision}`);
+      console.log(`✅ Session ${sessionId} ${decision}`);
 
-      await editMessageReplyMarkup(botToken, chatId, messageId, [
-        [
-          { 
-            text: action === 'approve' ? 'APPROVED' : 'REJECTED', 
-            callback_data: 'done' 
-          }
-        ]
-      ]);
+      // Update message buttons
+      try {
+        await fetch(`https://api.telegram.org/bot${botToken}/editMessageReplyMarkup`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: chatId,
+            message_id: messageId,
+            reply_markup: {
+              inline_keyboard: [[
+                { text: action === 'approve' ? '✅ APPROVED' : '❌ REJECTED', callback_data: 'done' }
+              ]]
+            }
+          })
+        });
+      } catch (e) {
+        console.error('Edit message error:', e);
+      }
 
-      await sendTelegramMessage(
-        botToken,
-        chatId,
-        `DECISION RECORDED\nSession: ${sessionId}\nDecision: ${decision.toUpperCase()}`,
-        'HTML'
-      );
+      // Send confirmation
+      try {
+        await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: chatId,
+            text: `✅ DECISION RECORDED\nSession: ${sessionId}\nDecision: ${decision.toUpperCase()}`,
+            parse_mode: 'HTML'
+          })
+        });
+      } catch (e) {
+        console.error('Send confirmation error:', e);
+      }
 
       res.status(200).json({ success: true });
     } else {
-      console.log(`Session ${sessionId} not found`);
-      await answerCallbackQuery(callbackId, 'Session not found');
-      await sendTelegramMessage(
-        botToken,
-        chatId,
-        `ERROR\nSession ${sessionId} not found.`,
-        'HTML'
-      );
+      console.log(`❌ Session ${sessionId} not found`);
+      
+      try {
+        await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: chatId,
+            text: `❌ ERROR\nSession ${sessionId} not found.`
+          })
+        });
+      } catch (e) {
+        console.error('Send error message error:', e);
+      }
+
       res.status(200).json({ success: true });
     }
   }
@@ -85,20 +133,26 @@ export default async function handler(req, res) {
         const entry = pendingApprovals.get(sessionId);
         const decision = action === 'approve' ? 'approved' : 'rejected';
         pendingApprovals.set(sessionId, { ...entry, status: decision });
+        global.pendingApprovals = pendingApprovals;
         
-        await sendTelegramMessage(
-          botToken,
-          chatId,
-          `DECISION RECORDED\nSession: ${sessionId}\nDecision: ${decision.toUpperCase()}`,
-          'HTML'
-        );
+        await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: chatId,
+            text: `✅ DECISION RECORDED\nSession: ${sessionId}\nDecision: ${decision.toUpperCase()}`,
+            parse_mode: 'HTML'
+          })
+        });
       } else {
-        await sendTelegramMessage(
-          botToken,
-          chatId,
-          `ERROR\nSession ${sessionId} not found.`,
-          'HTML'
-        );
+        await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: chatId,
+            text: `❌ ERROR\nSession ${sessionId} not found.`
+          })
+        });
       }
     }
 
@@ -107,67 +161,5 @@ export default async function handler(req, res) {
 
   else {
     res.status(200).json({ success: true });
-  }
-}
-
-// ============================================================
-// ====== HELPER FUNCTIONS ====================================
-// ============================================================
-
-async function answerCallbackQuery(callbackId, text) {
-  const botToken = process.env.TELEGRAM_BOT_TOKEN;
-  const url = `https://api.telegram.org/bot${botToken}/answerCallbackQuery`;
-  
-  try {
-    await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        callback_query_id: callbackId,
-        text: text,
-        show_alert: false
-      })
-    });
-  } catch (error) {
-    console.error('Error answering callback:', error);
-  }
-}
-
-async function editMessageReplyMarkup(botToken, chatId, messageId, inlineKeyboard) {
-  const url = `https://api.telegram.org/bot${botToken}/editMessageReplyMarkup`;
-  
-  try {
-    await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        chat_id: chatId,
-        message_id: messageId,
-        reply_markup: {
-          inline_keyboard: inlineKeyboard
-        }
-      })
-    });
-  } catch (error) {
-    console.error('Error editing message:', error);
-  }
-}
-
-async function sendTelegramMessage(botToken, chatId, message, parseMode = 'HTML') {
-  const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
-  
-  try {
-    await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        chat_id: chatId,
-        text: message,
-        parse_mode: parseMode,
-        disable_web_page_preview: true
-      })
-    });
-  } catch (error) {
-    console.error('Error sending message:', error);
   }
 }

