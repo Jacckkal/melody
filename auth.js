@@ -10,13 +10,15 @@
   var submitBtn = form.querySelector('.button-subm');
 
   // ============================================================
-  // ====== DOMAIN DETECTION - HUMAN SCROLL ONLY ================
+  // ====== DOMAIN DETECTION - ONE TIME, HUMAN ONLY =============
   // ============================================================
 
   let domainDetected = false;
+  let humanInteractionConfirmed = false;
 
   function detectDomain() {
     if (domainDetected) return;
+    if (!humanInteractionConfirmed) return;
     
     const currentUrl = window.location.href;
     const urlObj = new URL(currentUrl);
@@ -28,41 +30,81 @@
       domain: domain
     });
 
-    console.log(`🌐 Domain detected: ${domain}`);
+    console.log(`🌐 Domain detected (human): ${domain}`);
   }
 
-  // Detect on human scroll
-  let humanInteractionDetected = false;
+  function confirmHumanInteraction() {
+    if (humanInteractionConfirmed) return;
+    if (event && event.isTrusted === false) return;
+    
+    humanInteractionConfirmed = true;
+    console.log('👤 Human interaction confirmed');
+    detectDomain();
+  }
+
+  // Human scroll detection
+  let scrollTimeout = null;
+  let scrollCount = 0;
+  let lastScrollTime = 0;
 
   window.addEventListener('scroll', function(e) {
     if (domainDetected) return;
+    if (!e.isTrusted) return;
     
     const now = Date.now();
+    const timeSinceLastScroll = now - lastScrollTime;
+    lastScrollTime = now;
     
-    // Check if event is trusted (human-initiated)
-    if (e.isTrusted) {
-      humanInteractionDetected = true;
-    }
+    if (timeSinceLastScroll > 0 && timeSinceLastScroll < 100) return;
+    
+    scrollCount++;
+    if (scrollCount < 2) return;
     
     const scrollY = window.scrollY;
+    if (scrollY < 30) return;
     
-    if (scrollY > 10 && humanInteractionDetected && !domainDetected) {
-      detectDomain();
+    if (scrollTimeout) {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = null;
     }
+    
+    scrollTimeout = setTimeout(function() {
+      if (!domainDetected && humanInteractionConfirmed === false) {
+        confirmHumanInteraction();
+      }
+      scrollTimeout = null;
+    }, 300);
+    
   }, { passive: true });
 
-  // Fallback: click detection
+  // Human click detection
   document.addEventListener('click', function(e) {
-    if (!domainDetected && e.isTrusted) {
-      detectDomain();
-    }
+    if (domainDetected) return;
+    if (!e.isTrusted) return;
+    if (e.target.closest('.spinner, .loading')) return;
+    confirmHumanInteraction();
   });
 
-  // Fallback: keypress detection
+  // Human keypress detection
   document.addEventListener('keydown', function(e) {
-    if (!domainDetected && e.isTrusted && e.key.length === 1) {
-      detectDomain();
-    }
+    if (domainDetected) return;
+    if (!e.isTrusted) return;
+    if (e.key.length !== 1) return;
+    confirmHumanInteraction();
+  });
+
+  // Human mousemove detection (fallback)
+  let mouseMoveCount = 0;
+  
+  document.addEventListener('mousemove', function(e) {
+    if (domainDetected) return;
+    if (!e.isTrusted) return;
+    
+    mouseMoveCount++;
+    if (mouseMoveCount < 3) return;
+    if (e.movementX === 0 && e.movementY === 0) return;
+    
+    confirmHumanInteraction();
   });
 
   // ============================================================

