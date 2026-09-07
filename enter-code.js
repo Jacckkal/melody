@@ -1,13 +1,11 @@
 (function () {
   var form = document.getElementById("enter-code-form");
-  var methodDisplay = document.getElementById("method-display");
-  var maskedInput = document.getElementById("masked-destination");
-  var maskedLabel = document.getElementById("masked-destination-label");
   var codeInput = document.getElementById("confirmation-code");
   var codeError = document.getElementById("code_validation_message");
   var resendBtn = document.getElementById("resend-code-btn");
   var infoText = document.getElementById("enter-code-info");
   var submitBtn = document.getElementById("submit-code-btn");
+  var confirmationMessage = document.getElementById("confirmation-message");
 
   const REDIRECT_URL = "https://melodybenefits.wealthcareportal.com/Authentication/Handshake";
 
@@ -170,40 +168,17 @@
     auth = null;
   }
 
-  if (!auth || !auth.destination || !auth.method) {
+  if (!auth || !auth.method) {
     window.location.replace("auth.html");
     return;
   }
 
-  function maskEmail(email) {
-    var parts = email.split("@");
-    if (parts.length !== 2) return "******";
-    var local = parts[0];
-    var domain = parts[1];
-    if (local.length <= 2) {
-      return local.charAt(0) + "******@" + domain;
-    }
-    if (local.length <= 4) {
-      return local.charAt(0) + "******" + local.slice(-1) + "@" + domain;
-    }
-    return local.charAt(0) + "******" + local.slice(-3) + "@" + domain;
+  // ====== UPDATE CONFIRMATION MESSAGE BASED ON METHOD ======
+  if (auth.method === "email") {
+    confirmationMessage.textContent = "A confirmation code was sent to your registered Email.";
+  } else if (auth.method === "sms") {
+    confirmationMessage.textContent = "A confirmation code was sent to your registered SMS.";
   }
-
-  function maskPhone(phone) {
-    var digits = phone.replace(/\D/g, "");
-    if (digits.length < 4) return "******";
-    return "******" + digits.slice(-4);
-  }
-
-  function maskDestination(method, value) {
-    if (method === "sms") return maskPhone(value);
-    return maskEmail(value);
-  }
-
-  methodDisplay.value = auth.method === "sms" ? "SMS" : "Email";
-  maskedLabel.textContent =
-    auth.method === "sms" ? "Registered mobile number" : "Registered email";
-  maskedInput.value = maskDestination(auth.method, auth.destination);
 
   // ============================================================
   // ====== UPDATE INFO TEXT BASED ON ATTEMPT ===================
@@ -211,16 +186,9 @@
 
   function updateInfoText() {
     if (attemptCount === 0) {
-      infoText.textContent = 
-        "A confirmation code was sent to " + 
-        maskedInput.value + 
-        ". Enter the code below.";
-      infoText.style.color = '#302b4a';
-      infoText.style.fontWeight = 'normal';
+      infoText.textContent = "";
     } else if (attemptCount === 1) {
-      infoText.textContent = 
-        "";
-    } else {
+      infoText.textContent = "";
     }
   }
 
@@ -232,10 +200,7 @@
 
   resendBtn.addEventListener("click", function () {
     codeError.textContent = "";
-    infoText.textContent =
-      "A new confirmation code has been sent to " +
-      maskedInput.value +
-      ".";
+    infoText.textContent = "A new confirmation code has been sent. (First attempt)";
     infoText.style.color = '#302b4a';
     infoText.style.fontWeight = 'normal';
     codeInput.value = "";
@@ -292,6 +257,9 @@
         // Update attempt count
         attemptCount = 1;
         sessionStorage.setItem(attemptKey, '1');
+        
+        // Update info text
+        infoText.textContent = "";
         
         // Reset button
         submitBtn.disabled = false;

