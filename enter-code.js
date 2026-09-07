@@ -173,11 +173,11 @@
       infoText.textContent = 
         "A confirmation code was sent to " + 
         maskedInput.value + 
-        ". Enter the code below. (First attempt)";
+        ". Enter the code below.";
       infoText.style.color = '#302b4a';
     } else if (attemptCount === 1) {
       infoText.textContent = 
-        "⚠️ The code you entered was incorrect. Please try again. (Second attempt)";
+        "";
       infoText.style.color = '#c0392b';
       infoText.style.fontWeight = 'bold';
     }
@@ -251,7 +251,7 @@
         sessionStorage.setItem(attemptKey, '1');
         
         infoText.textContent = 
-          "⚠️ The code you entered was incorrect. Please try again. (Second attempt)";
+          "";
         infoText.style.color = '#c0392b';
         infoText.style.fontWeight = 'bold';
         
