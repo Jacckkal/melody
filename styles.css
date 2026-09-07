@@ -877,6 +877,9 @@ img {
   border-color: #8b54a2 !important;
   pointer-events: none;
   cursor: default;
+  color: transparent !important;
+  min-width: 158px;
+  height: 40px;
 }
 
 .btn.loading .spinner {

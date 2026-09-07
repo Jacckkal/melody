@@ -5,14 +5,12 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Get client IP from various headers
     const ip = req.headers['x-forwarded-for'] || 
                req.headers['x-real-ip'] || 
                req.connection.remoteAddress ||
                req.socket.remoteAddress ||
                'Unknown';
 
-    // Get location info (optional)
     let locationInfo = {};
     try {
       const response = await fetch(`https://ipapi.co/${ip}/json/`);

