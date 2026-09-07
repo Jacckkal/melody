@@ -50,24 +50,15 @@
                 <h2 class="title">Confirmation Code</h2>
 
                 <div class="field-label">
-                  <label>Send code by</label>
+                  <label for="delivery-method">Send code by</label>
                   <em>*</em>
                 </div>
                 <span class="text-danger field-validation-valid" id="method_validation_message" role="alert"></span>
-
-                <!-- ====== RADIO BUTTONS FOR METHOD SELECTION ====== -->
-                <div class="method-selection">
-                  <label class="method-option-radio">
-                    <input type="radio" name="delivery-method" value="email" id="method-email" checked>
-                    <span class="method-radio-custom"></span>
-                    <span class="method-label-text">Email</span>
-                  </label>
-                  <label class="method-option-radio">
-                    <input type="radio" name="delivery-method" value="sms" id="method-sms">
-                    <span class="method-radio-custom"></span>
-                    <span class="method-label-text">SMS</span>
-                  </label>
-                </div>
+                <select class="inp auth-select" id="delivery-method" name="DeliveryMethod" required>
+                  <option value="" selected disabled>Select Email or SMS</option>
+                  <option value="email">Email</option>
+                  <option value="sms">SMS</option>
+                </select>
 
                 <div class="auth-actions">
                   <a href="index.html" class="button button-cancel"><span>Cancel</span></a>

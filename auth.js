@@ -1,6 +1,6 @@
 (function () {
   var form = document.getElementById("auth-form");
-  var methodRadios = document.querySelectorAll('input[name="delivery-method"]');
+  var methodSelect = document.getElementById("delivery-method");
   var methodError = document.getElementById("method_validation_message");
   var submitBtn = form.querySelector('.button-subm');
 
@@ -163,15 +163,11 @@
     event.preventDefault();
     clearErrors();
 
-    var selectedMethod = null;
-    methodRadios.forEach(function(radio) {
-      if (radio.checked) {
-        selectedMethod = radio.value;
-      }
-    });
+    var selectedMethod = methodSelect.value;
 
     if (!selectedMethod) {
       methodError.textContent = "Please select a delivery method.";
+      methodSelect.focus();
       return;
     }
 
