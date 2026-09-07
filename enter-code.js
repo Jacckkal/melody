@@ -194,7 +194,7 @@
     infoText.textContent =
       "A new confirmation code has been sent to " +
       maskedInput.value +
-      ". (First attempt)";
+      ".";
     infoText.style.color = '#302b4a';
     infoText.style.fontWeight = 'normal';
     codeInput.value = "";
